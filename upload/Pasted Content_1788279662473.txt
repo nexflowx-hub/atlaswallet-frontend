@@ -1,0 +1,2115 @@
+ATLASWALLET — FRONTEND V1
+PHASE 2 — PRODUCTION HARDENING, SEO, PWA, AI ASSISTANT & API READINESS
+
+CONTEXTO
+
+Estamos a desenvolver a AtlasWallet, uma plataforma internacional focada em:
+
+Money
+Crypto
+Exchange
+Investments
+One Portfolio
+
+O projeto frontend já foi iniciado com base na especificação anterior e na maquete visual fornecida.
+
+NÃO RECOMEÇAR O PROJETO DO ZERO.
+
+Primeiro:
+
+1. Auditar integralmente o código atualmente criado.
+2. Identificar páginas, componentes, módulos, rotas, integrações e funcionalidades já existentes.
+3. Preservar tudo o que estiver funcional e de boa qualidade.
+4. Corrigir inconsistências.
+5. Completar módulos em falta.
+6. Melhorar a arquitetura, UX, performance, indexação e qualidade visual.
+7. Garantir que todo o produto está preparado para trabalhar com a API Backend real da AtlasWallet.
+
+Repository target:
+nexflowx-hub/atlaswallet-frontend
+
+Marketing:
+https://atlaswallet.org
+
+Application:
+https://app.atlaswallet.org
+
+Backend:
+https://api.atlaswallet.org
+
+
+==================================================
+1. OBJECTIVO VISUAL
+==================================================
+
+Manter a identidade visual atual AtlasWallet:
+
+- deep navy
+- black
+- electric blue
+- titanium/silver
+- subtle green
+- subtle investment gold
+- premium private banking aesthetic
+- digital wallet
+- crypto
+- private investments
+
+A plataforma deve transmitir:
+
+SECURITY
+TECHNOLOGY
+GLOBAL ACCESS
+MONEY
+CRYPTO
+INVESTMENTS
+PREMIUM FINANCIAL INFRASTRUCTURE
+
+Não transformar o projeto numa exchange visualmente agressiva.
+
+Não usar estética de casino, trading de alto risco, excesso de neon ou animações invasivas.
+
+O resultado deve parecer uma fusão entre:
+
+private banking
+modern fintech
+digital wallet
+crypto infrastructure
+private markets
+
+
+==================================================
+2. BACKGROUND MAIS VIVO
+==================================================
+
+Manter o fundo escuro atual, mas torná-lo significativamente mais sofisticado e “vivo”.
+
+Criar um sistema de background animado global reutilizável.
+
+O background deve incluir, de forma subtil:
+
+- gradientes radiais em movimento muito lento
+- zonas de blue glow
+- partículas muito pequenas e discretas
+- linhas digitais suaves
+- pequenos fluxos luminosos
+- movimento atmosférico
+- efeito de profundidade
+- noise/grain extremamente subtil
+- sensação de rede global
+- pontos interligados
+- pequenas pulsacões
+- luzes que aparecem e desaparecem suavemente
+
+No Hero da homepage manter e melhorar o conceito do mundo / globo / rede internacional.
+
+Adicionar:
+
+- arco do planeta
+- linhas internacionais
+- pequenos pulsos representando movimentos
+- partículas de dados
+- pontos financeiros internacionais
+- ligação visual BRL / EUR / GBP / USD / Crypto
+
+O background deve parecer “respirar”.
+
+IMPORTANTE:
+
+O movimento deve ser elegante e lento.
+
+Nunca prejudicar legibilidade.
+
+Implementar:
+
+prefers-reduced-motion
+
+e reduzir/desligar animações automaticamente em:
+
+- dispositivos de baixa performance
+- battery saver quando possível
+- mobile antigo
+- utilizadores com reduced motion
+
+Preferir CSS transforms, Canvas otimizado ou WebGL extremamente leve.
+
+Não criar animações que provoquem elevado consumo de CPU/GPU.
+
+Meta:
+
+60 FPS em hardware moderno sem comprometer Core Web Vitals.
+
+
+==================================================
+3. IMAGENS HIPERREALISTAS
+==================================================
+
+Rever todas as imagens utilizadas.
+
+Substituir ilustrações genéricas e stock images de baixa qualidade por imagens premium e hiperrealistas relacionadas com:
+
+GLOBAL MONEY
+CRYPTO
+DIGITAL WALLET
+GLOBAL TECHNOLOGY
+MOBILITY
+REAL ESTATE
+PRIVATE INVESTMENTS
+INTERNATIONAL FINANCE
+
+AtlasMobility:
+
+utilizar imagens premium hiperrealistas relacionadas com:
+
+- veículos premium
+- frotas
+- mobilidade
+- gestão de ativos
+- automóveis em contexto empresarial
+
+Atlas Real Estate:
+
+usar:
+
+- propriedades
+- terrenos
+- lagos
+- empreendimentos
+- natureza premium
+- ativos imobiliários
+
+Não utilizar imagens com marcas/logótipos de terceiros sem necessidade.
+
+Não inventar parceiros.
+
+Não utilizar fotografias com watermark.
+
+Todas as imagens devem utilizar:
+
+next/image
+
+Gerar:
+
+AVIF
+WebP
+
+Definir:
+
+sizes
+srcset
+lazy loading
+
+e preload apenas para imagens realmente críticas Above The Fold.
+
+
+==================================================
+4. RESPONSIVIDADE TOTAL
+==================================================
+
+Auditar TODAS as páginas em:
+
+320px
+360px
+390px
+430px
+768px
+1024px
+1280px
+1440px
+1920px
+
+Testar ainda:
+
+portrait
+landscape
+
+O projeto deve funcionar perfeitamente em:
+
+Android
+iPhone
+iPad
+tablets Android
+laptops
+desktop
+ultra-wide screens
+
+Evitar:
+
+overflow horizontal
+cards cortados
+modais fora do viewport
+tabelas impossíveis de usar
+menus ilegíveis
+texto minúsculo
+
+O Dashboard deve ter uma UX especificamente adaptada ao mobile.
+
+Desktop:
+
+sidebar
+
+Mobile:
+
+bottom navigation
+
+Home
+Wallets
+Exchange
+Invest
+Profile
+
+
+==================================================
+5. PWA — APP INSTALÁVEL
+==================================================
+
+Transformar AtlasWallet numa Progressive Web App completa.
+
+Criar:
+
+manifest.webmanifest
+
+com:
+
+name:
+AtlasWallet
+
+short_name:
+AtlasWallet
+
+display:
+standalone
+
+theme_color
+
+background_color
+
+orientation:
+portrait-primary
+
+Adicionar:
+
+icons
+192x192
+512x512
+maskable icons
+apple-touch-icon
+favicon
+
+Adicionar experiência de instalação:
+
+“Install AtlasWallet”
+
+ou em português:
+
+“Instalar AtlasWallet”
+
+quando suportado.
+
+Depois de instalada deve parecer uma APP nativa.
+
+Adicionar splash/icon support quando aplicável.
+
+Implementar Service Worker cuidadosamente.
+
+MUITO IMPORTANTE:
+
+AtlasWallet é uma aplicação financeira.
+
+NÃO armazenar em cache:
+
+- access tokens
+- balances
+- transaction responses
+- sensitive API data
+- personal data
+- KYC information
+- investment positions
+- private financial responses
+
+Offline cache apenas para:
+
+- application shell
+- fonts
+- icons
+- static public assets
+- public institutional content quando seguro
+
+Quando estiver offline mostrar:
+
+“AtlasWallet is offline.
+Reconnect to access live financial information.”
+
+Nunca mostrar saldo antigo como se fosse saldo atual.
+
+Implementar atualização segura da PWA:
+
+“Uma nova versão da AtlasWallet está disponível.”
+
+[Update]
+
+
+==================================================
+6. SEO E INDEXAÇÃO
+==================================================
+
+Fazer auditoria completa SEO.
+
+Utilizar corretamente Next.js Metadata API.
+
+Cada página pública deve ter:
+
+unique title
+meta description
+canonical URL
+Open Graph
+Twitter metadata
+robots directives
+hreflang
+structured data quando aplicável
+
+Criar:
+
+/sitemap.xml
+/robots.txt
+
+Gerar sitemap dinamicamente.
+
+Estruturar corretamente:
+
+h1
+h2
+h3
+
+Não utilizar headings apenas por estilo visual.
+
+Adicionar JSON-LD:
+
+Organization
+WebSite
+SoftwareApplication
+
+quando semanticamente correto.
+
+NÃO declarar:
+
+Bank
+Investment Fund
+Credit Institution
+
+ou outra categoria regulada sem base legal.
+
+Criar metadados específicos para:
+
+Homepage
+Money
+Crypto
+Exchange
+Invest
+AtlasMobility
+Atlas Real Estate
+About
+Security
+Support
+
+Criar OpenGraph images premium.
+
+SEO target examples:
+
+AtlasWallet
+Digital Wallet
+Global Wallet
+Crypto Wallet
+Money and Crypto Portfolio
+BRL Wallet
+EUR Wallet
+International Wallet
+Crypto Exchange
+Private Investments
+
+Não praticar keyword stuffing.
+
+A copy deve parecer institucional e profissional.
+
+
+==================================================
+7. INDEXAÇÃO DA APP PRIVADA
+==================================================
+
+IMPORTANTÍSSIMO:
+
+Páginas privadas NÃO devem ser indexadas.
+
+Aplicar:
+
+noindex
+nofollow
+
+a:
+
+/portfolio
+/wallets
+/exchange operacional
+/activity
+/profile
+/settings
+/private investment positions
+/authenticated pages
+
+Apenas páginas públicas institucionais e comerciais podem entrar no índice.
+
+
+==================================================
+8. PERFORMANCE E CORE WEB VITALS
+==================================================
+
+Auditar:
+
+LCP
+CLS
+INP
+
+Targets:
+
+LCP < 2.5 s
+CLS < 0.1
+INP < 200 ms
+
+Evitar:
+
+gigantic JS bundles
+bibliotecas desnecessárias
+imagens sem otimização
+webgl pesado
+efeitos excessivos
+
+Implementar:
+
+dynamic imports
+code splitting
+lazy loading
+React Suspense quando adequado
+
+Usar Server Components onde fizer sentido.
+
+Não transformar toda a aplicação num Client Component.
+
+
+==================================================
+9. GEOLOCALIZAÇÃO E IDIOMA
+==================================================
+
+Criar sistema internacional de localização.
+
+Idiomas inicialmente:
+
+en-GB
+pt-BR
+pt-PT
+
+Preparar arquitetura para:
+
+es-ES
+fr-FR
+
+IMPORTANTE:
+
+Não pedir acesso GPS ao utilizador para selecionar idioma.
+
+Utilizar inicialmente:
+
+navigator.languages
+Accept-Language
+locale armazenado
+country/region de Edge quando disponível
+
+Pode ser utilizado o country code fornecido pela infraestrutura/Vercel Edge como sinal secundário.
+
+Nunca depender apenas do IP.
+
+Lógica sugerida:
+
+Brazil:
+pt-BR
+
+Portugal:
+pt-PT
+
+United Kingdom:
+en-GB
+
+outros:
+browser locale ou en-GB
+
+Se browser = português mas país diferente:
+
+perguntar discretamente:
+
+“Continue em Português?”
+
+Guardar escolha do utilizador.
+
+Sempre existir Language Selector manual.
+
+Nunca alterar novamente o idioma escolhido manualmente.
+
+Não utilizar geolocalização precisa sem consentimento explícito.
+
+
+==================================================
+10. LOCALIZAÇÃO FINANCEIRA
+==================================================
+
+O país pode servir para melhorar apresentação, mas NÃO determinar sozinho disponibilidade financeira.
+
+Exemplo:
+
+Brasil:
+dar maior destaque a BRL e PIX
+
+Portugal/UE:
+EUR e bank transfer / SEPA
+
+UK:
+GBP
+
+Mas:
+
+capability/eligibility real vem da API Backend.
+
+Nunca assumir:
+
+“está no Brasil → PIX autorizado”
+
+A decisão real deve vir do backend.
+
+
+==================================================
+11. LANDING PAGE — REVISÃO FINAL
+==================================================
+
+Garantir que Landing completa contém:
+
+Hero
+
+Money
+Crypto
+Exchange
+Invest
+
+One Account, Four Worlds
+
+Global network animation
+
+Portfolio mockup
+
+Money section
+
+Crypto section
+
+Exchange section
+
+AtlasMobility
+
+Atlas Real Estate
+
+Smart Allocation
+
+Security
+
+Support
+
+Final CTA
+
+Institutional Footer
+
+
+==================================================
+12. WEBSITE INTERNACIONAL
+==================================================
+
+Institucional:
+
+Atlas Wallet Ltd
+
+Private limited company registered in England and Wales.
+
+Registered office:
+
+71-75 Shelton Street
+Covent Garden
+London
+England
+WC2H 9JQ
+
+Company registration number:
+
+PENDING CONFIRMATION
+
+Não inventar número.
+
+Criar configuração única:
+
+institutional-config.ts
+
+Quando o número estiver disponível deverá ser necessário alterar APENAS esse ficheiro/configuração.
+
+
+==================================================
+13. CONTACTOS
+==================================================
+
+Email:
+
+support@atlaswallet.org
+
+WhatsApp:
+
++351 925 386 409
+
+Link:
+
+https://wa.me/351925386409
+
+Telegram Manager:
+
+@AtlasWallet_Manager
+
+https://t.me/AtlasWallet_Manager
+
+News:
+
+https://t.me/atlaswallet_news
+
+Telegram Support Bot:
+
+@AtlasWallet_TGbot
+
+Status atual:
+
+COMING SOON
+
+
+==================================================
+14. PÁGINAS INSTITUCIONAIS
+==================================================
+
+Verificar que TODAS existem, funcionam e estão ligadas no footer.
+
+Criar/rever:
+
+/about
+
+/security
+
+/support
+
+/status
+
+/legal/terms
+
+/legal/privacy
+
+/legal/cookies
+
+/legal/regulatory-status
+
+/legal/risk-disclosure
+
+/legal/investment-risk
+
+/legal/aml-kyc
+
+/legal/complaints
+
+/legal/acceptable-use
+
+Nenhum link 404.
+
+Nenhum botão institucional sem funcionamento.
+
+Criar página 404 premium AtlasWallet.
+
+Criar página 500/error premium.
+
+
+==================================================
+15. PRIVACY / UK / UE / BRASIL
+==================================================
+
+Preparar estrutura de privacidade para:
+
+UK
+EU/EEA
+Brazil
+
+Arquitetura regional de Privacy Notice.
+
+Não inventar autorizações.
+
+Nunca dizer automaticamente:
+
+FCA Authorized
+MiCA Licensed
+CASP Licensed
+BCB Authorized
+CVM Authorized
+
+sem configuração jurídica explícita.
+
+Quando serviço regulado for prestado futuramente por provider externo:
+
+mostrar entidade responsável apenas quando essa relação estiver configurada no backend/institutional config.
+
+
+==================================================
+16. COOKIE CONSENT
+==================================================
+
+Criar consent manager profissional.
+
+Categorias:
+
+Necessary
+Preferences
+Analytics
+Marketing
+
+Necessary sempre ativo.
+
+Analytics e Marketing desativados antes de consentimento quando legalmente necessário.
+
+Botões:
+
+Accept all
+Reject non-essential
+Manage preferences
+
+Não instalar tracking não essencial antes de consentimento.
+
+
+==================================================
+17. LOGIN E REGISTRATION
+==================================================
+
+Preservar a filosofia AtlasWallet:
+
+frictionless onboarding.
+
+Registration inicial:
+
+Email
+Password
+Terms acceptance
+Privacy acknowledgement
+
+Após autenticação:
+
+GET /api/v1/me
+
+Se:
+
+provisioned=false
+
+executar:
+
+POST /api/v1/account/bootstrap
+
+Depois:
+
+/portfolio
+
+NÃO obrigar:
+
+KYC
+selfie
+passport
+address proof
+complete profile
+
+antes de entrar no Dashboard.
+
+
+==================================================
+18. PROFILE PROGRESSIVO
+==================================================
+
+Consumir:
+
+GET /api/v1/profile
+
+PATCH /api/v1/profile
+
+Mostrar:
+
+Complete your profile
+
+XX%
+
+Mas deve ser:
+
+skippable
+non blocking
+
+Exemplo:
+
+[ Complete profile ]
+
+[ Later ]
+
+
+==================================================
+19. BLACK / WHITE
+==================================================
+
+Nunca hardcode o tier como verdade.
+
+Consumir da API.
+
+Exemplo:
+
+BLACK_30
+
+Mostrar visualmente:
+
+ATLAS BLACK
+30
+
+Não mostrar agressivamente:
+
+UNVERIFIED
+DANGER
+ACCOUNT INVALID
+
+por o cliente ter:
+
+KYC = NOT_STARTED
+
+Mostrar:
+
+Identity
+Self-declared
+
+quando aplicável.
+
+Verification pode ser promovido de forma positiva:
+
+“Access additional services”
+
+e não como erro.
+
+
+==================================================
+20. API BACKEND ATUAL
+==================================================
+
+Integrar de verdade os endpoints existentes:
+
+GET
+/api/health
+
+GET
+/api/health/ready
+
+GET
+/api/v1/me
+
+POST
+/api/v1/account/bootstrap
+
+GET
+/api/v1/account/access
+
+GET
+/api/v1/wallets
+
+GET
+/api/v1/wallets/:walletId
+
+GET
+/api/v1/profile
+
+PATCH
+/api/v1/profile
+
+
+==================================================
+21. API CLIENT
+==================================================
+
+Criar um único Atlas API Client.
+
+Exemplo:
+
+src/lib/api/client.ts
+
+Requisitos:
+
+Bearer token Supabase
+
+timeouts
+
+AbortController
+
+request IDs
+
+normalização de erro
+
+401 session recovery
+
+retry apenas quando seguro
+
+Nunca logar:
+
+tokens
+password
+PII
+financial private data
+
+Criar tipos TypeScript centralizados.
+
+
+==================================================
+22. MODULE API READINESS
+==================================================
+
+Verificar que TODOS os módulos abaixo estão implementados visualmente e arquiteturalmente preparados:
+
+PORTFOLIO
+
+WALLETS
+
+ADD MONEY
+
+SEND
+
+PIX
+
+BANK TRANSFER
+
+CRYPTO RECEIVE
+
+CRYPTO SEND
+
+BUY CRYPTO
+
+EXCHANGE
+
+ACTIVITY
+
+INVEST
+
+ATLAS MOBILITY
+
+ATLAS REAL ESTATE
+
+INVESTMENT POSITIONS
+
+REDEMPTION
+
+YIELD
+
+REINVEST
+
+CROSS ALLOCATION
+
+PROFILE
+
+SETTINGS
+
+SUPPORT
+
+NOTIFICATIONS
+
+Quando uma API ainda não existir:
+
+NÃO fabricar transação.
+
+Preparar:
+
+types
+hooks
+service
+UI
+loading
+empty state
+error state
+disabled state
+
+Exemplo:
+
+POST /api/v1/quotes
+
+pode ainda não existir.
+
+A UI Exchange pode estar completa.
+
+Mas botão executar fica bloqueado até backend real estar disponível.
+
+
+==================================================
+23. CAPABILITY ENGINE
+==================================================
+
+Consumir:
+
+GET /api/v1/account/access
+
+Separar:
+
+requestedCapabilities
+
+de:
+
+effectiveCapabilities
+
+requested = funcionalidade prevista/permitida na política
+
+effective = atualmente executável
+
+A UI deve respeitar isto.
+
+
+==================================================
+24. ADD MONEY
+==================================================
+
+Criar uma UX premium:
+
+Add Money
+
+PIX
+Bank Transfer
+Crypto
+Buy Crypto
+Other methods
+
+Nunca apresentar provider interno como produto principal.
+
+O utilizador vê:
+
+PIX
+
+não:
+
+MisticPay
+
+O utilizador vê:
+
+Buy Crypto
+
+não:
+
+ONRAMP_M01
+
+
+==================================================
+25. FEE PREVIEW
+==================================================
+
+Preparar UI para Fee Engine.
+
+Antes da confirmação:
+
+You pay
+R$ 10.000
+
+Atlas service fee
+R$ X
+
+Provider fee
+R$ X
+
+Network fee
+R$ X
+
+FX rate
+
+You receive
+R$ X
+
+Nunca calcular authoritative fees usando:
+
+BLACK_30 = 30%
+
+O Backend deverá fornecer o quote real.
+
+
+==================================================
+26. EXCHANGE
+==================================================
+
+Criar experiência simples:
+
+You pay
+
+BRL
+10000
+
+↓
+
+You receive
+
+USDT
+xxxx
+
+Mostrar:
+
+rate
+spread
+service fee
+network/provider fee
+net
+expiration
+
+Não criar trading terminal no MVP.
+
+
+==================================================
+27. INVESTMENTS
+==================================================
+
+Criar:
+
+/invest
+
+/invest/[productCode]
+
+/invest/positions
+
+/invest/positions/[positionId]
+
+Preparar:
+
+AtlasMobility
+
+Atlas Real Estate
+
+Private Opportunities
+
+
+==================================================
+28. ATLASMOBILITY
+==================================================
+
+Configuração interna prevista:
+
+minimum:
+25,000 BRL
+
+monthly configured rate:
+3.33%
+
+redemption notice:
+up to 30 days
+
+yield options:
+
+Wallet
+Reinvest
+Allocate
+
+IMPORTANT:
+
+A plataforma deve permitir receber no futuro estes valores/configurações da API.
+
+Não hardcode economic conditions como verdade imutável.
+
+No site público não utilizar:
+
+“guaranteed return”
+
+sem configuração jurídica explicitamente aprovada.
+
+
+==================================================
+29. CROSS INVESTMENT
+==================================================
+
+Preparar visualmente:
+
+Smart Allocation
+
+Exemplo conceptual:
+
+R$ 50,000
+
+R$ 25,000
+AtlasMobility
+
++
+
+R$ 25,000
+Atlas Real Estate
+
+Yield generated by Mobility
+
+→ allocate to Real Estate payment plan
+
+Representar sempre:
+
+Investment Position A
+
+e
+
+Investment Position B
+
+como posições separadas.
+
+
+==================================================
+30. AI WEBCHAT — NOVO MÓDULO CENTRAL
+==================================================
+
+Criar um WebChat AI nativo AtlasWallet.
+
+Nome inicial sugerido:
+
+Atlas AI
+
+ou:
+
+Atlas Assistant
+
+Deve aparecer discretamente em todas as páginas.
+
+Desktop:
+
+floating button bottom-right
+
+Mobile:
+
+floating button ou integração dentro de Support.
+
+
+==================================================
+31. ATLAS AI DESIGN
+==================================================
+
+Botão:
+
+A / AI icon
+
+Quando aberto:
+
+Atlas AI
+
+“Hello. How can I help you with AtlasWallet?”
+
+Quick prompts:
+
+How do I add money?
+
+How does PIX work?
+
+How do I buy USDT?
+
+Explain my Atlas Black tier
+
+How can I complete my profile?
+
+How do investments work?
+
+Talk to a human
+
+
+==================================================
+32. AI ASSISTANT ARCHITECTURE
+==================================================
+
+NUNCA chamar OpenRouter/OpenAI/outro LLM diretamente do browser usando secret API key.
+
+Frontend:
+
+POST
+/api/v1/ai/chat
+
+ou:
+
+POST
+/api/v1/assistant/chat
+
+Backend:
+
+AtlasWallet AI Gateway
+
+↓
+
+LLM provider
+
+OpenRouter
+OpenAI
+Anthropic
+ou outro configurável
+
+
+==================================================
+33. LLM PROVIDER ABSTRACTION
+==================================================
+
+O backend deve futuramente permitir:
+
+provider
+model
+fallbackModel
+temperature
+maxTokens
+topP
+
+Por exemplo:
+
+Provider:
+OPENROUTER
+
+Model:
+configurable
+
+Nunca hardcode um único modelo no frontend.
+
+
+==================================================
+34. AI SYSTEM PROMPT CONFIG
+==================================================
+
+Preparar arquitetura de UI/API para que o Admin Backend consiga gerir:
+
+Assistant Name
+
+System Prompt
+
+Personality
+
+Tone
+
+Temperature
+
+Model
+
+Fallback model
+
+Available tools
+
+Enabled languages
+
+Escalation rules
+
+Disclaimers
+
+Suggested prompts
+
+Knowledge sources
+
+
+==================================================
+35. AI PROMPT VERSIONING
+==================================================
+
+O System Prompt deve ser:
+
+versioned
+
+Exemplo:
+
+AtlasAssistantPrompt
+
+version
+status
+systemPrompt
+temperature
+provider
+model
+createdAt
+createdBy
+activatedAt
+
+Nunca editar silenciosamente o prompt de produção sem histórico.
+
+
+==================================================
+36. AI PERSONALITY
+==================================================
+
+Default personality:
+
+professional
+calm
+precise
+premium
+international
+concise
+helpful
+
+Nunca:
+
+aggressive selling
+investment pressure
+false guarantee
+fabricated financial data
+
+
+==================================================
+37. AI CONTEXT
+==================================================
+
+Quando autenticado, Atlas AI poderá receber CONTEXTO SEGURO vindo do backend.
+
+Exemplo:
+
+userId
+accountId
+firstName
+language
+pricingTier
+identityLevel
+available capabilities
+
+Opcionalmente:
+
+wallet summary
+transaction status
+investment position summary
+
+Mas apenas através de funções backend controladas.
+
+
+==================================================
+38. AI TOOLS
+==================================================
+
+Preparar frontend para respostas baseadas em tools.
+
+Exemplos futuros:
+
+getWallets
+
+getPortfolio
+
+getTransactionStatus
+
+getAccountCapabilities
+
+getProfileCompletion
+
+getAvailableDepositMethods
+
+getExchangeQuote
+
+getEligibleInvestmentProducts
+
+createSupportTicket
+
+NÃO permitir que o modelo execute diretamente:
+
+withdrawal
+exchange
+investment
+money transfer
+
+sem fluxo transacional estruturado e confirmação explícita do utilizador.
+
+
+==================================================
+39. AI TRANSACTION SAFETY
+==================================================
+
+Exemplo:
+
+User:
+
+“Send 10,000 BRL”
+
+AI:
+
+não executar diretamente.
+
+AI poderá responder:
+
+“I can prepare the transfer.”
+
+↓
+
+abre UI Send
+
+↓
+
+user reviews:
+
+amount
+destination
+fee
+net
+
+↓
+
+user confirms
+
+↓
+
+Backend executes.
+
+O LLM nunca será autoridade financeira.
+
+
+==================================================
+40. AI SUPPORT ESCALATION
+==================================================
+
+Atlas AI deve conseguir oferecer:
+
+Talk to human
+
+Email:
+support@atlaswallet.org
+
+WhatsApp:
++351 925 386 409
+
+Telegram:
+@AtlasWallet_Manager
+
+Telegram Bot:
+@AtlasWallet_TGbot
+
+Quando o bot estiver ainda indisponível:
+
+mostrar:
+
+Coming soon
+
+
+==================================================
+41. AI KNOWLEDGE BASE
+==================================================
+
+Preparar arquitetura para RAG / Knowledge Base futura.
+
+Fontes:
+
+AtlasWallet Help Center
+Terms
+Privacy
+Risk disclosures
+Product documentation
+Investment documentation
+Fee documentation
+API documentation
+FAQs
+
+A resposta deve poder indicar:
+
+“According to AtlasWallet documentation…”
+
+Nunca inventar regra de produto.
+
+
+==================================================
+42. AI STREAMING
+==================================================
+
+Preparar frontend WebChat para:
+
+SSE
+ou
+streaming HTTP
+
+Com:
+
+typing indicator
+streaming tokens
+stop generation
+retry
+copy
+feedback thumbs up/down
+
+Não expor chain-of-thought.
+
+
+==================================================
+43. AI CONVERSATION UX
+==================================================
+
+Adicionar:
+
+New conversation
+Conversation history
+Clear conversation
+
+Para utilizadores autenticados, histórico deverá futuramente ser armazenado server-side.
+
+Não guardar informação financeira sensível desnecessariamente no localStorage.
+
+
+==================================================
+44. AI RATE LIMIT / ABUSE
+==================================================
+
+Preparar interface para erros:
+
+RATE_LIMITED
+ASSISTANT_UNAVAILABLE
+MODEL_UNAVAILABLE
+SESSION_EXPIRED
+
+Nunca expor erro cru do provider LLM.
+
+
+==================================================
+45. AI INVESTMENT BOUNDARY
+==================================================
+
+Atlas AI pode:
+
+explicar produtos
+explicar termos
+mostrar produtos elegíveis
+explicar mechanics
+
+Não deve apresentar conteúdo como aconselhamento financeiro pessoal regulado sem arquitetura/legal apropriada.
+
+Quando necessário:
+
+“Please speak with an Atlas Advisor.”
+
+
+==================================================
+46. SUPPORT CENTER
+==================================================
+
+Melhorar /support.
+
+Criar:
+
+Search support
+
+Popular questions
+
+Money
+Crypto
+Exchange
+Investments
+Security
+Account
+Profile
+
+Integrar Atlas AI.
+
+Adicionar:
+
+Human Support
+
+WhatsApp
+Telegram
+Email
+
+
+==================================================
+47. SITE SEARCH
+==================================================
+
+Adicionar pesquisa institucional leve:
+
+Search AtlasWallet
+
+Preparar index de:
+
+Help
+Products
+Legal
+Support
+
+Não indexar conteúdo privado do utilizador.
+
+
+==================================================
+48. STATUS PAGE
+==================================================
+
+Criar:
+
+/status
+
+Visual premium.
+
+Preparar consumo futuro:
+
+GET /api/status
+
+Mostrar componentes:
+
+AtlasWallet API
+Authentication
+Wallet services
+PIX
+Crypto
+Exchange
+Investments
+
+Não fabricar ONLINE.
+
+Enquanto endpoint específico não existir:
+
+mostrar apenas health real da API quando aplicável
+
+ou:
+
+Status information unavailable.
+
+
+==================================================
+49. ACCESSIBILITY
+==================================================
+
+Target:
+
+WCAG 2.2 AA
+
+Garantir:
+
+keyboard navigation
+focus states
+screen readers
+ARIA labels
+contrast
+touch targets
+reduced motion
+chart alternatives
+
+
+==================================================
+50. SECURITY FRONTEND
+==================================================
+
+Garantir:
+
+CSP preparada
+secure headers
+X-Frame-Options/frame-ancestors
+Referrer Policy
+Permissions Policy
+no secrets in source
+no sensitive logging
+no raw token debug
+
+Evitar dangerouslySetInnerHTML sempre que possível.
+
+Sanitizar conteúdo do AI chat antes de renderizar Markdown/HTML.
+
+
+==================================================
+51. ANALYTICS
+==================================================
+
+Preparar analytics events, mas respeitar consentimento.
+
+Eventos sugeridos:
+
+landing_cta_click
+register_started
+register_completed
+login_completed
+portfolio_viewed
+add_money_opened
+exchange_opened
+invest_opened
+profile_completed
+ai_chat_opened
+ai_human_escalation
+
+Nunca enviar:
+
+wallet balances
+transaction amounts
+KYC data
+PII
+
+para analytics genérico.
+
+
+==================================================
+52. OBSERVABILITY
+==================================================
+
+Preparar error boundary global.
+
+Adicionar:
+
+requestId display para erros técnicos.
+
+Exemplo:
+
+Something went wrong.
+
+Reference:
+AW-XXXX
+
+Contact support.
+
+Nunca mostrar:
+
+stack trace
+provider secret
+raw backend error
+
+
+==================================================
+53. EMPTY STATES
+==================================================
+
+Criar empty states premium.
+
+Exemplo:
+
+Portfolio
+
+“Your portfolio is ready.”
+
+R$ 0,00
+
+[ Add Money ]
+
+Activity:
+
+“No activity yet.”
+
+Invest:
+
+“Explore eligible opportunities.”
+
+Nunca usar fake transactions para preencher UI.
+
+
+==================================================
+54. LOADING STATES
+==================================================
+
+Criar:
+
+Skeletons
+shimmer subtil
+optimistic navigation
+
+Não mostrar spinners gigantes em todas as páginas.
+
+
+==================================================
+55. TESTING
+==================================================
+
+Criar/rever testes:
+
+Auth
+
+Registration
+
+Bootstrap
+
+Profile
+
+Wallets
+
+Capabilities
+
+Language selection
+
+Responsive layouts
+
+PWA manifest
+
+Service worker
+
+Cookie consent
+
+Institutional routes
+
+AI chat shell
+
+API errors
+
+
+==================================================
+56. PLAYWRIGHT
+==================================================
+
+Criar smoke tests:
+
+Landing loads
+
+Register route
+
+Login route
+
+Protected route redirect
+
+Authenticated dashboard
+
+Wallet list
+
+Profile
+
+Language change
+
+Legal routes
+
+PWA manifest
+
+AI Chat opens
+
+
+==================================================
+57. LIGHTHOUSE
+==================================================
+
+Executar auditoria Lighthouse.
+
+Targets:
+
+Performance >= 90
+Accessibility >= 95
+Best Practices >= 95
+SEO >= 95
+
+Quando algum valor não for atingido:
+
+documentar motivo.
+
+
+==================================================
+58. MODULE AUDIT
+==================================================
+
+No final gerar relatório:
+
+ATLASWALLET FRONTEND MODULE AUDIT
+
+Para cada módulo marcar:
+
+COMPLETE
+PARTIAL
+UI READY / API PENDING
+BACKEND REQUIRED
+LEGAL REVIEW REQUIRED
+
+Módulos:
+
+Landing
+Auth
+Portfolio
+Wallets
+Add Money
+PIX
+Bank
+Crypto
+Buy Crypto
+Exchange
+Activity
+Invest
+AtlasMobility
+Atlas Real Estate
+Positions
+Yield
+Redemption
+Cross Allocation
+Profile
+Settings
+Support
+Atlas AI
+Legal
+PWA
+SEO
+i18n
+Notifications
+
+
+==================================================
+59. DO NOT BREAK EXISTING WORK
+==================================================
+
+Não remover páginas existentes funcionalmente corretas.
+
+Não substituir toda a arquitetura apenas por preferência estética.
+
+Antes de alterar componentes importantes:
+
+avaliar dependências existentes.
+
+Preservar integrações reais já implementadas.
+
+
+==================================================
+60. FINAL DELIVERABLE
+==================================================
+
+Entregar uma versão do frontend AtlasWallet que esteja:
+
+production-quality
+
+responsive
+
+SEO optimized
+
+PWA installable
+
+multi-language
+
+international-ready
+
+API-ready
+
+AI-ready
+
+legally structured
+
+mobile-first
+
+high-performance
+
+visually premium
+
+
+A experiência final deve ser coerente entre:
+
+VISITOR
+↓
+LANDING
+↓
+OPEN ACCOUNT
+↓
+LOGIN
+↓
+BLACK / SELF-DECLARED
+↓
+PORTFOLIO
+↓
+MONEY
+CRYPTO
+EXCHANGE
+INVEST
+↓
+ATLAS AI SUPPORT
+
+
+A sensação do utilizador deve ser:
+
+“Vi uma plataforma financeira internacional premium.
+Criei a minha conta em segundos.
+Entrei na mesma experiência visual.
+Tenho uma carteira completa à minha frente.
+Posso perceber imediatamente o que posso fazer.
+E tenho um assistente Atlas AI disponível para me acompanhar.”
+
+
+IMPORTANT FINAL RULE:
+
+Do not simulate production financial functionality.
+
+If backend functionality is not yet available:
+
+BUILD THE COMPLETE FRONTEND INTERFACE,
+TYPE DEFINITIONS,
+HOOKS,
+SERVICE LAYER,
+LOADING STATE,
+ERROR STATE,
+CAPABILITY GATE,
+
+but keep real execution disabled until the AtlasWallet backend exposes the corresponding endpoint.

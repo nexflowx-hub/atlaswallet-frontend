@@ -1,0 +1,1219 @@
+{
+  "specVersion": "1.0.0",
+  "project": {
+    "name": "AtlasWallet",
+    "productName": "Atlas Wallet",
+    "legalEntityName": "Atlas Wallet Ltd",
+    "tagline": "Money · Crypto · Investments · One Portfolio.",
+    "positioning": "A unified digital portfolio for money, crypto, exchange and eligible private investment opportunities.",
+    "domains": {
+      "marketing": "https://atlaswallet.org",
+      "www": "https://www.atlaswallet.org",
+      "app": "https://app.atlaswallet.org",
+      "api": "https://api.atlaswallet.org"
+    },
+    "frontendRepository": "nexflowx-hub/atlaswallet-frontend",
+    "backendRepository": "nexflowx-hub/atlaswallet-backend",
+    "deployment": "Vercel"
+  },
+  "productRules": [
+    "Fast entry: email + password first; authenticated dashboard immediately after session + account bootstrap.",
+    "Self-declared profile is progressive and skippable.",
+    "KYC is not a universal frontend blocker; operation eligibility comes from backend policy/provider/route/risk rules.",
+    "Frontend never writes authoritative financial balances directly to Supabase/PostgreSQL.",
+    "All financial state, fees, quotes, capabilities, settlement and investment state come from AtlasWallet Backend API.",
+    "Never expose provider secrets, service-role keys, DB credentials or private crypto keys.",
+    "Never fabricate balances, successful transactions, user counts, testimonials, provider availability, licenses or guarantees.",
+    "BLACK_30 is a commercial tier; SELF_DECLARED is an identity level; KYC is a separate state.",
+    "Requested capabilities and effective capabilities are distinct.",
+    "Investment claims are jurisdiction/eligibility/legal-review gated."
+  ],
+  "stack": {
+    "framework": "Next.js App Router",
+    "language": "TypeScript",
+    "runtime": "Node.js 22+",
+    "styling": "Tailwind CSS + CSS variables",
+    "components": "shadcn/ui customized for AtlasWallet",
+    "icons": "Lucide React",
+    "forms": "React Hook Form + Zod",
+    "serverState": "TanStack Query",
+    "auth": "Supabase Auth for auth/session only",
+    "i18n": "next-intl",
+    "charts": "Recharts/lightweight SVG",
+    "motion": "Framer Motion subtle only",
+    "tests": "Vitest + React Testing Library + Playwright",
+    "deployment": "Vercel"
+  },
+  "architecture": {
+    "strategy": "Single Next.js repository with shared design system and hostname-aware marketing/app shells.",
+    "hosts": {
+      "atlaswallet.org": "marketing/legal",
+      "app.atlaswallet.org": "authenticated operational app"
+    },
+    "routeGroups": {
+      "(marketing)": "public pages",
+      "(auth)": "authentication",
+      "(app)": "authenticated app",
+      "(legal)": "legal/institutional"
+    },
+    "securityBoundary": {
+      "supabase": "authentication/session only; no financial DB operations from frontend",
+      "backend": "all account/wallet/fee/quote/transaction/investment operations via api.atlaswallet.org",
+      "authorization": "Bearer Supabase access token to AtlasWallet API over HTTPS",
+      "secrets": "Only browser-safe NEXT_PUBLIC Supabase values are allowed in frontend environment."
+    }
+  },
+  "environment": {
+    "public": {
+      "NEXT_PUBLIC_SITE_URL": "https://atlaswallet.org",
+      "NEXT_PUBLIC_APP_URL": "https://app.atlaswallet.org",
+      "NEXT_PUBLIC_API_URL": "https://api.atlaswallet.org",
+      "NEXT_PUBLIC_SUPABASE_URL": "<deploy-value>",
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "<deploy-value>"
+    },
+    "featureFlags": {
+      "NEXT_PUBLIC_FEATURE_EXCHANGE": "true",
+      "NEXT_PUBLIC_FEATURE_INVEST": "true",
+      "NEXT_PUBLIC_FEATURE_ACTIVITY": "true",
+      "NEXT_PUBLIC_FEATURE_SUPPORT_WIDGET": "true",
+      "NEXT_PUBLIC_FEATURE_PWA": "false"
+    },
+    "forbidden": [
+      "DATABASE_URL",
+      "DIRECT_URL",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "provider API secrets",
+      "crypto private keys"
+    ]
+  },
+  "institutional": {
+    "entity": {
+      "legalName": "Atlas Wallet Ltd",
+      "entityType": "Private limited company",
+      "jurisdiction": "England and Wales",
+      "companyNumber": null,
+      "companyNumberState": "PENDING_CONFIRMATION",
+      "registeredOffice": "71-75 Shelton Street, Covent Garden, London, England, WC2H 9JQ",
+      "rule": "Do not invent the company number. Insert the confirmed Companies House number globally when received."
+    },
+    "contacts": {
+      "email": {
+        "value": "support@atlaswallet.org",
+        "href": "mailto:support@atlaswallet.org"
+      },
+      "whatsapp": {
+        "display": "+351 925 386 409",
+        "e164": "+351925386409",
+        "href": "https://wa.me/351925386409"
+      },
+      "telegramManager": {
+        "handle": "@AtlasWallet_Manager",
+        "href": "https://t.me/AtlasWallet_Manager"
+      },
+      "telegramNews": {
+        "handle": "@atlaswallet_news",
+        "href": "https://t.me/atlaswallet_news"
+      },
+      "telegramBot": {
+        "handle": "@AtlasWallet_TGbot",
+        "href": "https://t.me/AtlasWallet_TGbot",
+        "status": "COMING_SOON"
+      }
+    },
+    "regions": {
+      "UK": {
+        "enabled": true,
+        "privacy": "UK GDPR / applicable UK data protection and electronic communications rules",
+        "regulatoryCopy": "No FCA claim unless verified and configured."
+      },
+      "EU_EEA": {
+        "enabled": true,
+        "privacy": "EU GDPR and applicable local rules",
+        "regulatoryCopy": "No MiCA/CASP/payment authorization claim unless verified or clearly attributed to an authorized provider."
+      },
+      "Brazil": {
+        "enabled": true,
+        "privacy": "LGPD and applicable Brazilian rules",
+        "regulatoryCopy": "No BCB/CVM authorization claim unless verified; investment availability must be eligibility/legal gated."
+      }
+    }
+  },
+  "localization": {
+    "default": "en-GB",
+    "supported": [
+      "en-GB",
+      "pt-BR",
+      "pt-PT"
+    ],
+    "later": [
+      "es-ES",
+      "fr-FR"
+    ],
+    "strategy": "Suggest locale from browser, always allow manual selector, persist preference, never force by IP.",
+    "baseCurrencies": [
+      "BRL",
+      "EUR",
+      "GBP",
+      "USD"
+    ]
+  },
+  "designSystem": {
+    "direction": "Private banking + modern digital wallet + crypto + private markets.",
+    "theme": "dark-first",
+    "colors": {
+      "background": "#020711",
+      "backgroundElevated": "#07101E",
+      "surface": "#0A1424",
+      "surfaceHover": "#0D1A2D",
+      "border": "#17243A",
+      "textPrimary": "#F5F8FC",
+      "textSecondary": "#95A4B8",
+      "textMuted": "#68778D",
+      "brandBlue": "#1687FF",
+      "brandBlueBright": "#3EA0FF",
+      "success": "#2DDC8C",
+      "warning": "#F6B93B",
+      "danger": "#FF6376",
+      "investmentGold": "#E8AA35",
+      "cryptoPurple": "#8B68FF"
+    },
+    "radius": {
+      "card": "16px",
+      "button": "10px",
+      "modal": "20px",
+      "pill": "999px"
+    },
+    "typography": {
+      "family": "Inter or Geist Sans",
+      "display": "56-72px desktop / 40-48px mobile",
+      "appH1": "32-40px",
+      "body": "14-16px",
+      "numbers": "tabular-nums"
+    },
+    "motion": "150-300ms, restrained, no casino/trading-terminal effects.",
+    "visualMotifs": [
+      "subtle world/globe horizon",
+      "payment paths",
+      "portfolio allocation ring",
+      "network badges",
+      "premium real-asset imagery"
+    ],
+    "mobile": "first-class responsive design with bottom navigation."
+  },
+  "marketing": {
+    "header": {
+      "nav": [
+        {
+          "label": "Money",
+          "href": "/money"
+        },
+        {
+          "label": "Crypto",
+          "href": "/crypto"
+        },
+        {
+          "label": "Exchange",
+          "href": "/exchange"
+        },
+        {
+          "label": "Invest",
+          "href": "/invest"
+        },
+        {
+          "label": "About",
+          "href": "/about"
+        },
+        {
+          "label": "Support",
+          "href": "/support"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Log in",
+          "href": "https://app.atlaswallet.org/login",
+          "style": "ghost"
+        },
+        {
+          "label": "Open account",
+          "href": "https://app.atlaswallet.org/register",
+          "style": "primary"
+        }
+      ],
+      "utilities": [
+        "languageSelector"
+      ]
+    },
+    "home": {
+      "hero": {
+        "eyebrow": "MONEY · CRYPTO · INVESTMENTS",
+        "title": "One Portfolio. Endless Possibilities.",
+        "subtitle": "Manage money, digital assets, exchange and eligible private opportunities from one intelligent portfolio.",
+        "primaryCTA": "Create your account",
+        "secondaryCTA": "Explore AtlasWallet",
+        "visual": "Dashboard preview; if figures are illustrative label the preview Illustrative interface."
+      },
+      "worldAnimation": {
+        "enabled": true,
+        "title": "Built for a connected financial world",
+        "rule": "Conceptual network visualization, not a claim every rail is live in every country."
+      },
+      "fourWorlds": [
+        {
+          "key": "money",
+          "title": "Money",
+          "copy": "Multi-currency wallets prepared for BRL, EUR, USD and GBP.",
+          "chips": [
+            "BRL",
+            "EUR",
+            "USD",
+            "GBP"
+          ]
+        },
+        {
+          "key": "crypto",
+          "title": "Crypto",
+          "copy": "Manage supported digital assets and networks through AtlasWallet infrastructure and eligible providers.",
+          "chips": [
+            "USDT",
+            "USDC",
+            "BTC",
+            "ETH",
+            "SOL"
+          ]
+        },
+        {
+          "key": "exchange",
+          "title": "Exchange",
+          "copy": "Simple fiat and crypto conversion with a clear quote and fee breakdown before confirmation.",
+          "chips": [
+            "Fiat ↔ Crypto",
+            "Crypto ↔ Crypto"
+          ]
+        },
+        {
+          "key": "invest",
+          "title": "Invest",
+          "copy": "Eligible private opportunities subject to product terms, jurisdiction and account eligibility.",
+          "chips": [
+            "Mobility",
+            "Real Estate",
+            "Private Opportunities"
+          ]
+        }
+      ],
+      "sections": [
+        "Money",
+        "Crypto",
+        "Exchange",
+        "Invest",
+        "Security-first architecture",
+        "Support",
+        "Final CTA"
+      ],
+      "socialProof": {
+        "mode": "DISABLED_UNTIL_VERIFIED",
+        "rule": "No fabricated metrics/testimonials/partner logos."
+      }
+    },
+    "publicPages": [
+      "/",
+      "/money",
+      "/crypto",
+      "/exchange",
+      "/invest",
+      "/about",
+      "/support",
+      "/security",
+      "/status"
+    ]
+  },
+  "auth": {
+    "register": {
+      "route": "/register",
+      "fields": [
+        "email",
+        "password"
+      ],
+      "requiredConsents": [
+        "Terms of Use",
+        "Privacy Notice"
+      ],
+      "optionalConsents": [
+        "marketing communications"
+      ],
+      "flow": [
+        "Supabase signUp/session",
+        "GET /api/v1/me",
+        "if provisioned=false POST /api/v1/account/bootstrap",
+        "go directly to /portfolio"
+      ],
+      "rule": "Never force profile completion before portfolio."
+    },
+    "login": {
+      "route": "/login",
+      "fields": [
+        "email",
+        "password"
+      ]
+    },
+    "recovery": [
+      "/forgot-password",
+      "/reset-password"
+    ],
+    "provisioning": "Controlled one-attempt bootstrap with one deliberate retry on retryable failure; no uncontrolled loop."
+  },
+  "appShell": {
+    "desktopSidebar": [
+      {
+        "label": "Portfolio",
+        "route": "/portfolio"
+      },
+      {
+        "label": "Wallets",
+        "route": "/wallets"
+      },
+      {
+        "label": "Exchange",
+        "route": "/exchange"
+      },
+      {
+        "label": "Invest",
+        "route": "/invest"
+      },
+      {
+        "label": "Activity",
+        "route": "/activity"
+      },
+      {
+        "label": "Profile",
+        "route": "/profile"
+      },
+      {
+        "label": "Settings",
+        "route": "/settings"
+      },
+      {
+        "label": "Support",
+        "route": "/support"
+      }
+    ],
+    "mobileBottomNav": [
+      {
+        "label": "Home",
+        "route": "/portfolio"
+      },
+      {
+        "label": "Wallets",
+        "route": "/wallets"
+      },
+      {
+        "label": "Exchange",
+        "route": "/exchange"
+      },
+      {
+        "label": "Invest",
+        "route": "/invest"
+      },
+      {
+        "label": "Profile",
+        "route": "/profile"
+      }
+    ],
+    "topbar": [
+      "context title",
+      "pricing tier badge",
+      "notifications placeholder",
+      "language",
+      "avatar"
+    ]
+  },
+  "portfolioPage": {
+    "route": "/portfolio",
+    "sections": [
+      {
+        "component": "PortfolioHero",
+        "content": [
+          "total portfolio in base currency",
+          "period selector",
+          "history chart when data exists"
+        ],
+        "fallback": "If valuation/history API absent, show current total only and hide fabricated performance."
+      },
+      {
+        "component": "QuickActions",
+        "actions": [
+          "Add Money",
+          "Send",
+          "Exchange",
+          "Invest"
+        ],
+        "rule": "Execution enabled state follows backend capabilities/route eligibility."
+      },
+      {
+        "component": "CategoryCards",
+        "cards": [
+          "Money",
+          "Crypto",
+          "Investments"
+        ]
+      },
+      {
+        "component": "AssetTable",
+        "columns": [
+          "asset",
+          "network",
+          "available",
+          "pending",
+          "reserved",
+          "blocked",
+          "estimated base value"
+        ]
+      },
+      {
+        "component": "InvestmentSummary",
+        "backendState": "PLANNED",
+        "emptyState": "Explore eligible opportunities"
+      },
+      {
+        "component": "RecentActivity",
+        "backendState": "PLANNED",
+        "emptyState": "No activity yet"
+      },
+      {
+        "component": "ProgressiveProfileCard",
+        "source": "GET /api/v1/profile",
+        "rule": "quiet, skippable, non-blocking"
+      }
+    ]
+  },
+  "wallets": {
+    "routes": [
+      "/wallets",
+      "/wallets/[walletId]"
+    ],
+    "tabs": [
+      "All",
+      "Money",
+      "Crypto"
+    ],
+    "assetExamples": {
+      "money": [
+        "BRL",
+        "EUR",
+        "USD",
+        "GBP"
+      ],
+      "crypto": [
+        "USDT",
+        "USDC",
+        "BTC",
+        "ETH",
+        "SOL"
+      ]
+    },
+    "networkGrouping": {
+      "USDT": [
+        "ETHEREUM",
+        "TRON",
+        "SOLANA"
+      ],
+      "USDC": [
+        "ETHEREUM",
+        "SOLANA"
+      ]
+    },
+    "walletDetail": [
+      "asset/network/status",
+      "available/pending/reserved/blocked",
+      "receive/add",
+      "send/withdraw",
+      "exchange",
+      "activity"
+    ]
+  },
+  "addMoney": {
+    "options": [
+      {
+        "key": "pix",
+        "label": "PIX",
+        "copy": "BRL deposit",
+        "providerPolicy": "provider-neutral UI"
+      },
+      {
+        "key": "bank",
+        "label": "Bank Transfer",
+        "copy": "EUR / IBAN / SEPA"
+      },
+      {
+        "key": "crypto",
+        "label": "Crypto",
+        "copy": "Receive supported digital assets"
+      },
+      {
+        "key": "buyCrypto",
+        "label": "Buy Crypto",
+        "copy": "Available fiat-to-crypto routes"
+      },
+      {
+        "key": "other",
+        "label": "Other methods",
+        "copy": "Available for eligible accounts only"
+      }
+    ],
+    "unavailableState": "Visible discovery card allowed; confirmation disabled with Temporarily unavailable."
+  },
+  "exchange": {
+    "route": "/exchange",
+    "style": "Simple convert/swap, not trading terminal.",
+    "fields": [
+      "pay asset",
+      "pay amount",
+      "receive asset",
+      "estimated receive",
+      "rate",
+      "Atlas fee",
+      "provider/network fee",
+      "net result",
+      "quote expiry"
+    ],
+    "rules": [
+      "Backend quote is authoritative",
+      "No final fee calculation solely in browser",
+      "No stale quote execution",
+      "Provider maintenance shown as neutral retryable state"
+    ]
+  },
+  "invest": {
+    "routes": [
+      "/invest",
+      "/invest/[productCode]",
+      "/invest/positions",
+      "/invest/positions/[positionId]"
+    ],
+    "products": [
+      {
+        "code": "ATLAS_MOBILITY",
+        "name": "AtlasMobility",
+        "category": "Mobility",
+        "minimumBRL": 25000,
+        "maximum": null,
+        "internalMonthlyRatePct": 3.33,
+        "redemptionNoticeDays": 30,
+        "yieldInstructions": [
+          "WALLET",
+          "REINVEST",
+          "ALLOCATE"
+        ],
+        "publicLegalState": "REVIEW_REQUIRED",
+        "rule": "Show rate/return wording only when supplied by legally approved product configuration."
+      },
+      {
+        "code": "ATLAS_REAL_ESTATE",
+        "name": "Atlas Real Estate",
+        "category": "Real Assets",
+        "examples": [
+          "Praia do Lago",
+          "Encanto das Águas",
+          "Other available opportunities"
+        ],
+        "publicLegalState": "REVIEW_REQUIRED"
+      }
+    ],
+    "crossAllocation": {
+      "enabledConcept": true,
+      "example": "Allocate eligible AtlasMobility distributions toward an eligible Atlas Real Estate payment plan.",
+      "rule": "Separate positions/contracts and explicit allocation instruction."
+    },
+    "riskUX": [
+      "eligibility",
+      "key terms",
+      "risk acknowledgement",
+      "documents",
+      "fee breakdown",
+      "confirmation",
+      "position detail"
+    ]
+  },
+  "profile": {
+    "route": "/profile",
+    "get": "GET /api/v1/profile",
+    "patch": "PATCH /api/v1/profile",
+    "fields": [
+      {
+        "key": "firstName",
+        "completion": true
+      },
+      {
+        "key": "lastName",
+        "completion": true
+      },
+      {
+        "key": "dateOfBirth",
+        "completion": true
+      },
+      {
+        "key": "nationalityCountryCode",
+        "completion": true
+      },
+      {
+        "key": "residenceCountryCode",
+        "completion": true
+      },
+      {
+        "key": "phoneE164",
+        "completion": false
+      }
+    ],
+    "presentation": {
+      "tier": "Atlas Black 30 / API-driven",
+      "identity": "Self-declared",
+      "kyc": "NOT_STARTED is not a red error",
+      "progress": "API completion.percent/missingFields"
+    }
+  },
+  "support": {
+    "route": "/support",
+    "channels": [
+      {
+        "label": "Email",
+        "value": "support@atlaswallet.org",
+        "href": "mailto:support@atlaswallet.org"
+      },
+      {
+        "label": "WhatsApp",
+        "value": "+351 925 386 409",
+        "href": "https://wa.me/351925386409"
+      },
+      {
+        "label": "Telegram Manager",
+        "value": "@AtlasWallet_Manager",
+        "href": "https://t.me/AtlasWallet_Manager"
+      },
+      {
+        "label": "News",
+        "value": "@atlaswallet_news",
+        "href": "https://t.me/atlaswallet_news"
+      },
+      {
+        "label": "Telegram Bot",
+        "value": "@AtlasWallet_TGbot",
+        "href": "https://t.me/AtlasWallet_TGbot",
+        "status": "Coming soon"
+      }
+    ],
+    "warning": "AtlasWallet support will never request passwords, seed phrases or private keys."
+  },
+  "backend": {
+    "baseUrl": "https://api.atlaswallet.org",
+    "existingEndpoints": [
+      {
+        "method": "GET",
+        "path": "/api/health",
+        "auth": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/health/ready",
+        "auth": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/me",
+        "auth": true,
+        "purpose": "user/account/pricing/identity/policy"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/account/bootstrap",
+        "auth": true,
+        "purpose": "idempotent account/wallet/ledger provisioning"
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/account/access",
+        "auth": true,
+        "purpose": "requested/effective capabilities and global controls"
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/wallets",
+        "auth": true
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/wallets/:walletId",
+        "auth": true
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/profile",
+        "auth": true
+      },
+      {
+        "method": "PATCH",
+        "path": "/api/v1/profile",
+        "auth": true
+      }
+    ],
+    "coreModels": {
+      "me": {
+        "provisioned": "boolean",
+        "account": {
+          "status": "enum",
+          "kycStatus": "enum",
+          "identityLevel": "enum",
+          "baseCurrency": "string",
+          "pricingPlan": "object",
+          "policyProfile": "object"
+        }
+      },
+      "wallet": {
+        "id": "uuid",
+        "status": "enum",
+        "asset": "{code,symbol,name,type,network,decimals,depositEnabled,withdrawEnabled,exchangeEnabled}",
+        "balance": "decimal strings: available,pending,reserved,blocked"
+      },
+      "profile": {
+        "source": "SELF_DECLARED",
+        "verified": false,
+        "canSkip": true,
+        "completion": "{percent,complete,missingFields}",
+        "profile": "nullable object"
+      },
+      "access": {
+        "controls": "{systemMoneyMovementEnabled,activeProviderCount,executionGate}",
+        "requestedCapabilities": "booleans",
+        "effectiveCapabilities": "booleans"
+      }
+    },
+    "plannedMvpEndpoints": [
+      {
+        "method": "GET",
+        "path": "/api/v1/portfolio",
+        "frontend": "interface prepared; hide performance if endpoint absent"
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/activity",
+        "frontend": "empty state until backend exists"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/quotes",
+        "frontend": "UI prepared; no fake quote"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/deposit-intents",
+        "frontend": "UI prepared; execution disabled until backend exists"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/withdrawal-intents",
+        "frontend": "UI prepared; execution disabled until backend exists"
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/investments/products",
+        "frontend": "legal/eligibility gated"
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/investments/positions",
+        "frontend": "empty state until backend exists"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/investments/subscriptions",
+        "frontend": "disabled until backend/legal gates"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/investments/redemptions",
+        "frontend": "disabled until backend/legal gates"
+      }
+    ],
+    "clientRules": [
+      "Single typed API client",
+      "Attach current Supabase bearer token",
+      "One refresh attempt on 401 then login",
+      "X-Request-ID for mutating operations",
+      "Normalize errors",
+      "Never log bearer token or PII",
+      "Timeout/AbortController",
+      "Invalidate related queries after successful mutation"
+    ]
+  },
+  "capabilityUX": {
+    "source": "/api/v1/account/access",
+    "states": {
+      "ENABLED": "action active",
+      "REQUESTED_NOT_EFFECTIVE": "visible but disabled/soft-gated",
+      "NOT_REQUESTED": "hide or upgrade/eligibility CTA",
+      "PROVIDER_MAINTENANCE": "neutral retryable state; no internal provider code"
+    },
+    "currentEntry": {
+      "identityLevel": "SELF_DECLARED",
+      "kycStatus": "NOT_STARTED",
+      "pricingPlan": "BLACK_30",
+      "policyProfile": "BLACK_ENTRY_OPEN"
+    }
+  },
+  "feeUX": {
+    "principle": "Operation-specific authoritative fees from backend quote/transaction snapshot.",
+    "showBeforeConfirm": [
+      "gross amount",
+      "Atlas service fee",
+      "provider/network fee",
+      "FX rate/spread when applicable",
+      "net/receive amount",
+      "quote expiry"
+    ],
+    "forbidden": [
+      "Use BLACK_30 feePercent as universal operation fee",
+      "Hide fees",
+      "Recompute historical fees using current rules"
+    ]
+  },
+  "legal": {
+    "rule": "Production-ready structure/templates but jurisdiction-specific legal review is required before regulated services/investment offers go live.",
+    "pages": [
+      {
+        "route": "/legal/terms",
+        "title": "Terms of Use",
+        "sections": [
+          "Eligibility",
+          "Account access",
+          "Permitted use",
+          "Provider dependency",
+          "Fees",
+          "Transactions",
+          "Restrictions",
+          "Liability",
+          "Availability",
+          "Complaints",
+          "Termination"
+        ]
+      },
+      {
+        "route": "/legal/privacy",
+        "title": "Privacy Notice",
+        "sections": [
+          "Controller/contact",
+          "Data categories",
+          "Purposes/legal bases",
+          "Recipients",
+          "International transfers",
+          "Retention",
+          "Security",
+          "Rights",
+          "Supervisory complaints",
+          "UK/EU/Brazil supplements"
+        ]
+      },
+      {
+        "route": "/legal/cookies",
+        "title": "Cookie Policy",
+        "sections": [
+          "Necessary",
+          "Preferences",
+          "Analytics",
+          "Marketing",
+          "Withdrawal",
+          "Actual deployed cookie list"
+        ]
+      },
+      {
+        "route": "/legal/regulatory-status",
+        "title": "Regulatory Status",
+        "sections": [
+          "Corporate identity",
+          "No invented licenses",
+          "Third-party regulated service attribution where applicable",
+          "Country/product availability"
+        ]
+      },
+      {
+        "route": "/legal/risk-disclosure",
+        "title": "Risk Disclosure",
+        "sections": [
+          "Crypto",
+          "Liquidity",
+          "FX",
+          "Provider/counterparty",
+          "Private investments",
+          "Capital at risk",
+          "Returns not assured"
+        ]
+      },
+      {
+        "route": "/legal/investment-risk",
+        "title": "Investment Risk"
+      },
+      {
+        "route": "/legal/aml-kyc",
+        "title": "Identity, AML & Financial Crime Controls",
+        "sections": [
+          "Self-declared entry",
+          "Later provider/route/risk verification",
+          "Source of funds/wealth may be requested",
+          "Restrictions for suspicious/prohibited activity"
+        ]
+      },
+      {
+        "route": "/legal/complaints",
+        "title": "Complaints"
+      },
+      {
+        "route": "/legal/acceptable-use",
+        "title": "Acceptable Use"
+      }
+    ],
+    "cookieConsent": {
+      "necessary": "always on",
+      "preferences": "consent based",
+      "analytics": "off until valid consent where required",
+      "marketing": "off until valid consent",
+      "buttons": [
+        "Accept all",
+        "Reject non-essential",
+        "Manage preferences"
+      ]
+    }
+  },
+  "footer": {
+    "columns": {
+      "Products": [
+        "Money",
+        "Crypto",
+        "Exchange",
+        "Invest"
+      ],
+      "Company": [
+        "About",
+        "Security",
+        "Support",
+        "Status"
+      ],
+      "Legal": [
+        "Terms",
+        "Privacy",
+        "Cookies",
+        "Risk Disclosure",
+        "Regulatory Status",
+        "Complaints"
+      ],
+      "Connect": [
+        "Email",
+        "WhatsApp",
+        "Telegram Manager",
+        "News Channel"
+      ]
+    },
+    "whenNumberKnown": "Atlas Wallet Ltd is a private limited company registered in England and Wales under company number {{COMPANY_NUMBER}}. Registered office: 71-75 Shelton Street, Covent Garden, London, England, WC2H 9JQ.",
+    "whilePending": "Atlas Wallet Ltd · Registered office: 71-75 Shelton Street, Covent Garden, London, England, WC2H 9JQ · Company number pending confirmation.",
+    "launchGate": "Populate the confirmed Companies House number before formal public production launch.",
+    "disclaimer": "Services and product availability depend on jurisdiction, eligibility and applicable provider requirements. No authorization/license claim is rendered unless verified and configured.",
+    "copyright": "© {{YEAR}} Atlas Wallet Ltd. All rights reserved."
+  },
+  "seo": {
+    "canonical": "https://atlaswallet.org",
+    "titleTemplate": "%s | AtlasWallet",
+    "homeTitle": "AtlasWallet — Money, Crypto & Investments in One Portfolio",
+    "homeDescription": "Manage supported money, digital assets, exchange and eligible private opportunities in one AtlasWallet portfolio.",
+    "structuredData": [
+      "Organization",
+      "WebSite",
+      "SoftwareApplication where appropriate"
+    ],
+    "avoid": [
+      "BankOrCreditUnion unless legally accurate",
+      "InvestmentFund unless legally accurate"
+    ],
+    "technical": [
+      "sitemap.xml",
+      "robots.txt",
+      "Open Graph",
+      "hreflang",
+      "semantic headings"
+    ]
+  },
+  "accessibility": {
+    "target": "WCAG 2.2 AA oriented",
+    "rules": [
+      "keyboard support",
+      "visible focus",
+      "ARIA for icon buttons",
+      "chart text alternatives",
+      "not color-only status",
+      "mobile touch targets",
+      "prefers-reduced-motion"
+    ]
+  },
+  "performance": {
+    "targets": {
+      "LCP": "<2.5s target",
+      "CLS": "<0.1 target",
+      "INP": "<200ms target"
+    },
+    "rules": [
+      "next/image",
+      "lazy-load below fold",
+      "code split app areas",
+      "avoid heavy third parties"
+    ]
+  },
+  "directoryBlueprint": [
+    "src/app/(marketing)/page.tsx",
+    "src/app/(marketing)/money/page.tsx",
+    "src/app/(marketing)/crypto/page.tsx",
+    "src/app/(marketing)/exchange/page.tsx",
+    "src/app/(marketing)/invest/page.tsx",
+    "src/app/(marketing)/about/page.tsx",
+    "src/app/(marketing)/support/page.tsx",
+    "src/app/(auth)/login/page.tsx",
+    "src/app/(auth)/register/page.tsx",
+    "src/app/(auth)/forgot-password/page.tsx",
+    "src/app/(app)/portfolio/page.tsx",
+    "src/app/(app)/wallets/page.tsx",
+    "src/app/(app)/wallets/[walletId]/page.tsx",
+    "src/app/(app)/exchange/page.tsx",
+    "src/app/(app)/invest/page.tsx",
+    "src/app/(app)/invest/[productCode]/page.tsx",
+    "src/app/(app)/activity/page.tsx",
+    "src/app/(app)/profile/page.tsx",
+    "src/app/(app)/settings/page.tsx",
+    "src/app/(legal)/legal/*",
+    "src/components/marketing/*",
+    "src/components/app-shell/*",
+    "src/components/portfolio/*",
+    "src/components/wallets/*",
+    "src/components/exchange/*",
+    "src/components/invest/*",
+    "src/components/profile/*",
+    "src/components/legal/*",
+    "src/components/ui/*",
+    "src/lib/api/client.ts",
+    "src/lib/api/types.ts",
+    "src/lib/auth/*",
+    "src/lib/i18n/*",
+    "src/lib/feature-flags.ts",
+    "src/config/institutional-config.ts",
+    "src/messages/en-GB.json",
+    "src/messages/pt-BR.json",
+    "src/messages/pt-PT.json"
+  ],
+  "phases": [
+    {
+      "id": "F1",
+      "name": "Foundation",
+      "deliver": [
+        "Next.js bootstrap",
+        "design system",
+        "responsive shells",
+        "Supabase auth",
+        "typed API client",
+        "i18n",
+        "cookie consent"
+      ]
+    },
+    {
+      "id": "F2",
+      "name": "Real current backend",
+      "deliver": [
+        "register/login/recovery",
+        "/me",
+        "automatic bootstrap",
+        "portfolio shell with live wallets",
+        "wallets",
+        "access state",
+        "profile",
+        "BLACK_30 badge"
+      ]
+    },
+    {
+      "id": "F3",
+      "name": "Landing + institutional",
+      "deliver": [
+        "full landing",
+        "product pages",
+        "about/support/security",
+        "legal pages",
+        "UK/EU/Brazil structure",
+        "SEO"
+      ]
+    },
+    {
+      "id": "F4",
+      "name": "MVP execution surfaces",
+      "deliver": [
+        "Add Money",
+        "fee/quote preview",
+        "Exchange",
+        "Activity",
+        "provider-neutral errors",
+        "enable as backend arrives"
+      ]
+    },
+    {
+      "id": "F5",
+      "name": "Invest",
+      "deliver": [
+        "catalog",
+        "AtlasMobility/Real Estate",
+        "eligibility/risk gates",
+        "positions",
+        "yield instruction",
+        "cross-allocation",
+        "subscription/redemption only after backend/legal gates"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    "Register -> session -> provision/bootstrap -> portfolio without forced profile.",
+    "No direct financial Supabase DB access.",
+    "Wallets reflect backend exactly.",
+    "BLACK_30 badge is API-driven.",
+    "Profile is skippable and persists through backend.",
+    "Requested/effective capability distinction is respected.",
+    "Unavailable operations never fabricate success.",
+    "Marketing and app share visual identity.",
+    "Mobile UX is first-class.",
+    "Institutional data centralized.",
+    "No fake company number/licenses/metrics/testimonials.",
+    "Cookie consent gates non-essential tracking.",
+    "Investment return/guarantee language is legal-review gated.",
+    "Lint/typecheck/tests/Next production build pass."
+  ],
+  "zai": {
+    "role": "Senior fintech product designer + senior Next.js engineer.",
+    "priority": [
+      "JSON = functional truth",
+      "attached AtlasWallet mockup = visual truth",
+      "existing backend endpoints cannot be renamed",
+      "planned endpoints cannot be simulated as real success"
+    ],
+    "deliver": [
+      "complete repository",
+      "landing",
+      "auth",
+      "operational app",
+      "legal pages",
+      "responsive mobile",
+      "real current API integration",
+      ".env.example",
+      "README",
+      "tests",
+      "Vercel-ready"
+    ],
+    "forbidden": [
+      "fake provider integration",
+      "fake licenses/company number",
+      "fake balances/successful financial transactions",
+      "frontend secrets",
+      "backend policy bypass",
+      "public guaranteed 3.33% claim without approved legal configuration"
+    ]
+  }
+}
