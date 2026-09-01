@@ -52,3 +52,25 @@ prompt
 server.log
 # Skills directory
 /skills/
+# AtlasWallet Phase 2 additions
+/dev.log
+/server.log
+/.zscripts/
+/tool-results/
+/upload/
+/download/
+/skills/
+/examples/
+/mini-services/
+/db/
+/prisma/
+
+# OS files
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Lock files (kept for reproducible installs but excluded from this repo)
+bun.lock

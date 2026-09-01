@@ -114,6 +114,93 @@ export default function InvestPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Smart Allocation visual */}
+      <Card className="mt-5 premium-card rounded-2xl overflow-hidden">
+        <div className="h-32 relative bg-gradient-to-br from-investment-gold/20 via-brand/10 to-transparent">
+          <div className="absolute inset-0 grid-bg opacity-30" aria-hidden />
+          <div className="absolute top-4 left-5">
+            <Badge variant="outline" className="border-investment-gold/40 bg-investment-gold/10 text-investment-gold text-[10px] uppercase tracking-wider">
+              Smart Allocation
+            </Badge>
+          </div>
+          <h2 className="absolute bottom-3 left-5 text-xl font-semibold">
+            Allocate yields across positions.
+          </h2>
+        </div>
+        <CardContent className="p-5">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Conceptual visualization of how AtlasMobility distributions can flow into Atlas
+            Real Estate payment plans. Each position remains a separate contract with its own
+            terms, redemption rules and yield instructions.
+          </p>
+
+          {/* Allocation diagram */}
+          <div className="mt-6 grid sm:grid-cols-[1fr_auto_1fr] gap-4 items-center">
+            {/* Position A */}
+            <div className="rounded-xl border border-brand/30 bg-brand/5 p-4">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-lg bg-brand/15 flex items-center justify-center text-brand">
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Position A</p>
+                  <p className="text-sm font-semibold">AtlasMobility</p>
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">Principal</p>
+              <p className="text-lg font-semibold tnum">R$ 50.000</p>
+              <p className="mt-2 text-xs text-muted-foreground">Yield instruction</p>
+              <Badge variant="outline" className="mt-1 border-brand/40 bg-brand/10 text-brand-bright text-[10px] uppercase tracking-wider">
+                Allocate
+              </Badge>
+            </div>
+
+            {/* Arrow / flow */}
+            <div className="flex flex-col items-center justify-center text-investment-gold">
+              <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Yield →</div>
+              <svg viewBox="0 0 100 24" className="w-24 h-6" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="alloc-flow" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#1687FF" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#E8AA35" stopOpacity="0.8" />
+                  </linearGradient>
+                </defs>
+                <path d="M0 12 L92 12" stroke="url(#alloc-flow)" strokeWidth="2" fill="none" />
+                <path d="M88 6 L96 12 L88 18" stroke="#E8AA35" strokeWidth="2" fill="none" strokeLinejoin="round" />
+              </svg>
+              <div className="text-xs text-investment-gold mt-1">Allocate</div>
+            </div>
+
+            {/* Position B */}
+            <div className="rounded-xl border border-investment-gold/30 bg-investment-gold/5 p-4">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-lg bg-investment-gold/15 flex items-center justify-center text-investment-gold">
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Position B</p>
+                  <p className="text-sm font-semibold">Atlas Real Estate</p>
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">Payment plan</p>
+              <p className="text-lg font-semibold tnum">R$ 25.000</p>
+              <p className="mt-2 text-xs text-muted-foreground">Example</p>
+              <Badge variant="outline" className="mt-1 border-investment-gold/40 bg-investment-gold/10 text-investment-gold text-[10px] uppercase tracking-wider">
+                Praia do Lago
+              </Badge>
+            </div>
+          </div>
+
+          <div className="mt-5 pt-4 border-t border-border">
+            <p className="text-[10px] text-muted-foreground leading-relaxed">
+              Illustrative example. Each subscription is a separate position with explicit allocation
+              instructions. Cross-allocation is never automatic — it requires explicit user action.
+              Eligibility, jurisdiction and legal review apply. Capital is at risk.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </AppShell>
   );
 }

@@ -168,7 +168,7 @@ function PortfolioHero() {
 
 function QuickActions() {
   const actions = [
-    { icon: Plus, label: "Add Money", color: "text-success", bg: "bg-success/10", href: "/wallets" },
+    { icon: Plus, label: "Add Money", color: "text-success", bg: "bg-success/10", href: "/add-money" },
     { icon: Send, label: "Send", color: "text-brand", bg: "bg-brand/10", href: "/wallets" },
     { icon: Repeat2, label: "Exchange", color: "text-crypto-purple", bg: "bg-crypto-purple/10", href: "/exchange" },
     { icon: TrendingUp, label: "Invest", color: "text-investment-gold", bg: "bg-investment-gold/10", href: "/invest" },

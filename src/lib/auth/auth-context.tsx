@@ -41,7 +41,9 @@ interface AuthContextValue {
   logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+export type { AuthContextValue };
+
+export const AuthContext = createContext<AuthContextValue | null>(null);
 
 const STORAGE_KEY = "atlaswallet.demo.session";
 

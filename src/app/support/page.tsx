@@ -1,13 +1,33 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Mail, MessageCircle, Send, AlertCircle, Clock } from "lucide-react";
+import {
+  Mail,
+  MessageCircle,
+  Send,
+  AlertCircle,
+  Clock,
+  Search,
+  Sparkles,
+  ChevronDown,
+  Inbox,
+} from "lucide-react";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { AppShell } from "@/components/app-shell/app-shell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useAuth } from "@/lib/auth/auth-context";
 import { institutionalConfig } from "@/config/institutional-config";
+import { FAQ_ITEMS, FAQ_CATEGORIES, searchFaq, type FaqItem } from "@/lib/support/faq";
 
 const channels = [
   {
@@ -15,7 +35,7 @@ const channels = [
     label: "Email",
     value: institutionalConfig.contacts.email.value,
     href: institutionalConfig.contacts.email.href,
-    tone: "brand",
+    tone: "brand" as const,
     external: true,
   },
   {
@@ -23,7 +43,7 @@ const channels = [
     label: "WhatsApp",
     value: institutionalConfig.contacts.whatsapp.display,
     href: institutionalConfig.contacts.whatsapp.href,
-    tone: "success",
+    tone: "success" as const,
     external: true,
   },
   {
@@ -31,7 +51,7 @@ const channels = [
     label: "Telegram Manager",
     value: institutionalConfig.contacts.telegramManager.handle,
     href: institutionalConfig.contacts.telegramManager.href,
-    tone: "purple",
+    tone: "purple" as const,
     external: true,
   },
   {
@@ -39,7 +59,7 @@ const channels = [
     label: "News Channel",
     value: institutionalConfig.contacts.telegramNews.handle,
     href: institutionalConfig.contacts.telegramNews.href,
-    tone: "brand",
+    tone: "brand" as const,
     external: true,
   },
 ];
@@ -52,27 +72,167 @@ const toneMap = {
 
 export default function SupportPage() {
   const { session } = useAuth();
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const filtered = useMemo(() => {
+    let items = searchFaq(query);
+    if (activeCategory) {
+      items = items.filter((i) => i.category === activeCategory);
+    }
+    return items;
+  }, [query, activeCategory]);
+
+  const grouped = useMemo(() => {
+    const map: Record<string, FaqItem[]> = {};
+    for (const c of FAQ_CATEGORIES) {
+      map[c] = filtered.filter((i) => i.category === c);
+    }
+    return map;
+  }, [filtered]);
 
   const content = (
     <>
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 radial-glow opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24 text-center">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20 text-center">
           <Badge variant="outline" className="mb-4 border-brand/30 text-brand-bright uppercase tracking-[0.16em] text-[10px]">
-            Support
+            Support Center
           </Badge>
           <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.1]">
-            Real humans, when it matters.
+            How can we help?
           </h1>
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            Reach AtlasWallet across multiple channels. We never request passwords, seed
-            phrases or private keys.
+            Search our knowledge base, chat with{" "}
+            <span className="text-brand-bright">Atlas AI</span>, or reach a human through your preferred channel.
+            We never request passwords, seed phrases or private keys.
           </p>
+
+          {/* Search */}
+          <div className="mt-8 max-w-xl mx-auto">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search support — e.g. 'PIX', 'USDT', 'Black tier'…"
+                className="pl-11 h-12 bg-surface/60 border-border text-base"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Quick category filter */}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            <button
+              onClick={() => setActiveCategory(null)}
+              className={`rounded-full px-3 py-1 text-xs border transition-colors ${
+                activeCategory === null
+                  ? "border-brand bg-brand/10 text-brand-bright"
+                  : "border-border bg-surface/60 text-muted-foreground hover:text-foreground hover:border-brand/40"
+              }`}
+            >
+              All
+            </button>
+            {FAQ_CATEGORIES.map((c) => (
+              <button
+                key={c}
+                onClick={() => setActiveCategory(activeCategory === c ? null : c)}
+                className={`rounded-full px-3 py-1 text-xs border transition-colors ${
+                  activeCategory === c
+                    ? "border-brand bg-brand/10 text-brand-bright"
+                    : "border-border bg-surface/60 text-muted-foreground hover:text-foreground hover:border-brand/40"
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* Atlas AI banner */}
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <Card className="premium-card rounded-2xl border-brand/30 bg-brand/5 overflow-hidden">
+          <CardContent className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="rounded-xl bg-gradient-to-br from-brand to-brand-bright p-3 text-white shrink-0">
+              <Sparkles className="h-6 w-6" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold">Ask Atlas AI</p>
+              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                Get instant answers about AtlasWallet — money, crypto, exchange, investments, your account and more.
+                Tap the floating button at the bottom-right of any page.
+              </p>
+            </div>
+            <div className="text-[10px] text-muted-foreground/70 uppercase tracking-wider shrink-0 hidden sm:block">
+              Available 24/7 · Preview mode
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* FAQ results */}
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12">
+        {filtered.length === 0 ? (
+          <Card className="premium-card rounded-2xl">
+            <CardContent className="py-12 text-center">
+              <div className="mx-auto rounded-full bg-surface p-3 w-fit">
+                <Inbox className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <p className="mt-4 text-sm font-medium">No results for &quot;{query}&quot;</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Try a different search or contact a human via the channels below.
+              </p>
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setQuery("");
+                  setActiveCategory(null);
+                }}
+                className="mt-4 text-brand"
+              >
+                Clear filters
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-8">
+            {FAQ_CATEGORIES.filter((c) => grouped[c]?.length).map((cat) => (
+              <div key={cat}>
+                <h2 className="text-xs uppercase tracking-[0.16em] text-muted-foreground font-semibold mb-3">
+                  {cat} · {grouped[cat].length}
+                </h2>
+                <Accordion type="single" collapsible className="space-y-2">
+                  {grouped[cat].map((item) => (
+                    <AccordionItem
+                      key={item.id}
+                      value={item.id}
+                      className="premium-card rounded-xl px-4 border-border/50"
+                    >
+                      <AccordionTrigger className="text-sm font-medium hover:no-underline py-4">
+                        {item.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-4">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Human channels */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="text-center max-w-2xl mx-auto mb-8">
+          <h2 className="text-2xl font-semibold tracking-tight">Talk to a human</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Reach AtlasWallet across multiple channels — we never request passwords, seed phrases or private keys.
+          </p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {channels.map((c) => (
             <a
               key={c.label}
