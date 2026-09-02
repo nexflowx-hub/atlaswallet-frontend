@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { z } from "zod";
@@ -34,6 +34,39 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
+          <div className="absolute inset-0 grid-bg opacity-20" aria-hidden />
+          <div className="absolute inset-0 radial-glow opacity-70" aria-hidden />
+          <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
+            <Logo />
+            <LanguageSelector />
+          </header>
+          <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-12">
+            <div className="w-full max-w-md premium-card rounded-2xl p-6 animate-pulse">
+              <div className="h-6 w-40 bg-surface rounded mb-3" />
+              <div className="h-4 w-64 bg-surface rounded mb-6" />
+              <div className="space-y-4">
+                <div className="h-10 bg-surface rounded" />
+                <div className="h-10 bg-surface rounded" />
+                <div className="h-10 bg-brand/30 rounded" />
+              </div>
+            </div>
+          </main>
+          <footer className="relative z-10 px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-muted-foreground">
+            © {new Date().getFullYear()} Atlas Wallet Ltd · England and Wales
+          </footer>
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
   const search = useSearchParams();
   const { login } = useAuth();
