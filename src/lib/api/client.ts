@@ -1,19 +1,18 @@
 /**
- * AtlasWallet — Typed API client for https://api.atlaswallet.org
+ * AtlasWallet — typed API client for https://api.atlaswallet.org
  *
- * Client rules (per spec):
- * - Single typed API client
- * - Attach current Supabase bearer token (mocked when env not configured)
- * - One refresh attempt on 401, then login
- * - X-Request-ID for mutating operations
- * - Normalize errors
- * - Never log bearer token or PII
- * - Timeout/AbortController
+ * Rules:
+ * - financial state comes only from the AtlasWallet backend;
+ * - bearer token comes from the auth layer;
+ * - one forced token refresh is allowed after HTTP 401;
+ * - mutating requests carry request/idempotency metadata where applicable;
+ * - bearer tokens and PII are never logged here.
  */
 
 import type {
   AccountAccess,
   ApiError,
+  BootstrapResponse,
   Me,
   Profile,
   Wallet,
@@ -24,8 +23,11 @@ const API_URL =
 
 const DEFAULT_TIMEOUT_MS = 15000;
 
-/** Token provider hook (set by auth layer). */
-type TokenProvider = () => Promise<string | null> | string | null;
+/**
+ * Auth hook. `forceRefresh=true` asks the auth layer to rotate/refresh the
+ * Supabase access token before returning it.
+ */
+type TokenProvider = (forceRefresh?: boolean) => Promise<string | null> | string | null;
 let tokenProvider: TokenProvider = async () => null;
 
 export function setTokenProvider(provider: TokenProvider) {
@@ -46,15 +48,23 @@ function generateRequestId(): string {
 }
 
 function normalizeError(status: number, body: unknown, requestId?: string): ApiError {
-  const err =
+  const nested =
     body && typeof body === "object" && "error" in body
       ? (body as { error?: { code?: string; message?: string } }).error
       : undefined;
+
+  const direct =
+    body && typeof body === "object"
+      ? (body as { code?: string; message?: string })
+      : undefined;
+
   const retriable = status >= 500 || status === 408 || status === 429;
+
   return {
     status,
-    code: err?.code || `HTTP_${status}`,
-    message: err?.message || `Request failed with status ${status}`,
+    code: nested?.code || direct?.code || `HTTP_${status}`,
+    message:
+      nested?.message || direct?.message || `Request failed with status ${status}`,
     requestId,
     retriable,
   };
@@ -65,6 +75,7 @@ export class ApiClientError extends Error {
   code: string;
   requestId?: string;
   retriable: boolean;
+
   constructor(e: ApiError) {
     super(e.message);
     this.name = "ApiClientError";
@@ -81,8 +92,10 @@ interface RequestOptions {
   signal?: AbortSignal;
   timeoutMs?: number;
   idempotencyKey?: string;
-  /** Skip auth header (for health endpoints). */
+  /** Skip auth header (health endpoints). */
   noAuth?: boolean;
+  /** Internal guard: never retry authentication more than once. */
+  authRetried?: boolean;
 }
 
 async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
@@ -93,28 +106,29 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
     timeoutMs = DEFAULT_TIMEOUT_MS,
     idempotencyKey,
     noAuth = false,
+    authRetried = false,
   } = opts;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-  // Combine external signal with internal timeout
+
   if (signal) {
-    signal.addEventListener("abort", () => controller.abort(), { once: true });
+    if (signal.aborted) controller.abort();
+    else signal.addEventListener("abort", () => controller.abort(), { once: true });
   }
 
+  const requestId = generateRequestId();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     Accept: "application/json",
-    "X-Request-ID": generateRequestId(),
+    "X-Request-ID": requestId,
   };
-  if (idempotencyKey) {
-    headers["Idempotency-Key"] = idempotencyKey;
-  }
+
+  if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+
   if (!noAuth) {
-    const token = await tokenProvider();
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
+    const token = await tokenProvider(false);
+    if (token) headers.Authorization = `Bearer ${token}`;
   }
 
   let res: Response;
@@ -133,6 +147,7 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
         status: 408,
         code: "TIMEOUT",
         message: "Request timed out",
+        requestId,
         retriable: true,
       });
     }
@@ -140,91 +155,99 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
       status: 0,
       code: "NETWORK",
       message: "Network error — please check your connection",
+      requestId,
       retriable: true,
     });
+  } finally {
+    clearTimeout(timeoutId);
   }
-  clearTimeout(timeoutId);
 
-  // 401 — one refresh attempt
-  if (res.status === 401 && !noAuth) {
-    // Auth layer should handle refresh; if still 401, surface login.
-    const requestId = headers["X-Request-ID"];
-    throw new ApiClientError({
-      status: 401,
-      code: "UNAUTHORIZED",
-      message: "Session expired — please log in again",
-      requestId,
-      retriable: false,
-    });
+  if (res.status === 401 && !noAuth && !authRetried) {
+    try {
+      const refreshedToken = await tokenProvider(true);
+      if (refreshedToken) {
+        return request<T>(path, { ...opts, authRetried: true });
+      }
+    } catch {
+      // Fall through to the normalized unauthorized response below.
+    }
   }
 
   const isJson = res.headers
     .get("content-type")
     ?.includes("application/json");
   const payload = isJson ? await res.json().catch(() => null) : null;
-  const requestId = headers["X-Request-ID"];
 
   if (!res.ok) {
+    if (res.status === 401 && !noAuth) {
+      throw new ApiClientError({
+        status: 401,
+        code: "UNAUTHORIZED",
+        message: "Session expired — please log in again",
+        requestId,
+        retriable: false,
+      });
+    }
     throw new ApiClientError(normalizeError(res.status, payload, requestId));
   }
+
   return payload as T;
 }
 
-// ---- Public API ----
-
 export const apiClient = {
-  /** GET /api/health — public */
   async health(signal?: AbortSignal) {
-    return request<{ status: string; ts: string }>(`/api/health`, {
-      signal,
-      noAuth: true,
-    });
+    return request<{
+      status: string;
+      service: string;
+      version: string;
+      timestamp: string;
+    }>(`/api/health`, { signal, noAuth: true });
   },
 
-  /** GET /api/health/ready — public */
   async healthReady(signal?: AbortSignal) {
-    return request<{ status: string; checks: Record<string, string> }>(
-      `/api/health/ready`,
-      { signal, noAuth: true }
-    );
+    return request<{
+      status: string;
+      service: string;
+      version: string;
+      dependencies: Record<string, string>;
+      timestamp: string;
+    }>(`/api/health/ready`, { signal, noAuth: true });
   },
 
-  /** GET /api/v1/me */
   async getMe(signal?: AbortSignal) {
     return request<Me>(`/api/v1/me`, { signal });
   },
 
-  /** POST /api/v1/account/bootstrap — idempotent */
   async bootstrap(signal?: AbortSignal) {
-    return request<{ ok: true; provisioned: boolean }>(
-      `/api/v1/account/bootstrap`,
-      { method: "POST", body: {}, signal, idempotencyKey: `bootstrap-${Date.now()}` }
-    );
+    return request<BootstrapResponse>(`/api/v1/account/bootstrap`, {
+      method: "POST",
+      body: {},
+      signal,
+      idempotencyKey: `bootstrap-${Date.now()}`,
+    });
   },
 
-  /** GET /api/v1/account/access */
   async getAccess(signal?: AbortSignal) {
     return request<AccountAccess>(`/api/v1/account/access`, { signal });
   },
 
-  /** GET /api/v1/wallets */
   async getWallets(signal?: AbortSignal) {
-    return request<{ wallets: Wallet[] }>(`/api/v1/wallets`, { signal });
+    return request<{ accountId: string; baseCurrency: string; wallets: Wallet[] }>(
+      `/api/v1/wallets`,
+      { signal }
+    );
   },
 
-  /** GET /api/v1/wallets/:walletId */
   async getWallet(walletId: string, signal?: AbortSignal) {
     return request<Wallet>(`/api/v1/wallets/${encodeURIComponent(walletId)}`, {
       signal,
     });
   },
 
-  /** GET /api/v1/profile */
   async getProfile(signal?: AbortSignal) {
     return request<Profile>(`/api/v1/profile`, { signal });
   },
 
-  /** PATCH /api/v1/profile */
   async patchProfile(
     patch: Partial<NonNullable<Profile["profile"]>>,
     signal?: AbortSignal
@@ -236,5 +259,3 @@ export const apiClient = {
     });
   },
 };
-
-export { ApiClientError };
