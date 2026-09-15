@@ -73,13 +73,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Don't break the build on minor TS issues — but keep types strict in editor.
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 };
 
 export default nextConfig;
