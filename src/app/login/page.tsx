@@ -69,7 +69,7 @@ export default function LoginPage() {
 function LoginForm() {
   const router = useRouter();
   const search = useSearchParams();
-  const { login } = useAuth();
+  const { login, authMode } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -110,12 +110,24 @@ function LoginForm() {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          <Alert className="mb-4 border-brand/30 bg-brand/5">
-            <Info className="h-4 w-4 text-brand" />
-            <AlertDescription className="text-muted-foreground">
-              Sandbox mode: Supabase is not configured. Use any email/password to explore the app.
-            </AlertDescription>
-          </Alert>
+
+          {authMode === "demo" && (
+            <Alert className="mb-4 border-brand/30 bg-brand/5">
+              <Info className="h-4 w-4 text-brand" />
+              <AlertDescription className="text-muted-foreground">
+                Demo mode is explicitly enabled. No real financial operation is executed.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {authMode === "unavailable" && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Login is temporarily unavailable because production authentication is not configured.
+              </AlertDescription>
+            </Alert>
+          )}
 
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
@@ -180,7 +192,7 @@ function LoginForm() {
             <Button
               type="submit"
               className="w-full bg-brand hover:bg-brand-bright text-white glow-brand"
-              disabled={submitting}
+              disabled={submitting || authMode === "unavailable"}
             >
               {submitting ? "Logging in…" : "Log in"}
               <ArrowRight className="ml-2 h-4 w-4" />
