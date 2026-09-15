@@ -1,13 +1,9 @@
 /**
  * AtlasWallet — Demo data.
  *
- * PURPOSE: showcase the frontend UX in sandbox/preview when the backend is
- * unreachable or not configured. Clearly marked as illustrative.
- *
- * RULES (from spec):
- * - Never fabricate balances/transactions as if they were real backend state.
- * - Real /api/v1/wallets, /api/v1/me, /api/v1/profile take precedence.
- * - Demo data MUST be clearly labelled "Illustrative".
+ * PURPOSE: showcase the frontend UX only when explicit demo auth is enabled.
+ * Real /api/v1 state always takes precedence and demo values never represent
+ * provider, ledger or wallet state in production.
  */
 
 import type {
@@ -30,7 +26,7 @@ export const demoWallets: Wallet[] = [
       symbol: "R$",
       name: "Brazilian Real",
       type: "FIAT",
-      network: "PIX",
+      network: "NONE",
       decimals: 2,
       depositEnabled: true,
       withdrawEnabled: true,
@@ -46,7 +42,7 @@ export const demoWallets: Wallet[] = [
       symbol: "€",
       name: "Euro",
       type: "FIAT",
-      network: "SEPA",
+      network: "NONE",
       decimals: 2,
       depositEnabled: true,
       withdrawEnabled: true,
@@ -62,7 +58,7 @@ export const demoWallets: Wallet[] = [
       symbol: "$",
       name: "US Dollar",
       type: "FIAT",
-      network: "SWIFT",
+      network: "NONE",
       decimals: 2,
       depositEnabled: true,
       withdrawEnabled: true,
@@ -78,7 +74,7 @@ export const demoWallets: Wallet[] = [
       symbol: "£",
       name: "Pound Sterling",
       type: "FIAT",
-      network: "SWIFT",
+      network: "NONE",
       decimals: 2,
       depositEnabled: true,
       withdrawEnabled: true,
@@ -90,7 +86,7 @@ export const demoWallets: Wallet[] = [
     id: "w_usdt_eth_001",
     status: "ACTIVE",
     asset: {
-      code: "USDT",
+      code: "USDT_ETHEREUM",
       symbol: "₮",
       name: "Tether USD",
       type: "CRYPTO",
@@ -106,7 +102,7 @@ export const demoWallets: Wallet[] = [
     id: "w_usdc_sol_001",
     status: "ACTIVE",
     asset: {
-      code: "USDC",
+      code: "USDC_SOLANA",
       symbol: "◎",
       name: "USD Coin",
       type: "CRYPTO",
@@ -122,11 +118,11 @@ export const demoWallets: Wallet[] = [
     id: "w_btc_001",
     status: "ACTIVE",
     asset: {
-      code: "BTC",
+      code: "BTC_BITCOIN",
       symbol: "₿",
       name: "Bitcoin",
       type: "CRYPTO",
-      network: "ETHEREUM",
+      network: "BITCOIN",
       decimals: 8,
       depositEnabled: true,
       withdrawEnabled: true,
@@ -138,12 +134,12 @@ export const demoWallets: Wallet[] = [
     id: "w_eth_001",
     status: "ACTIVE",
     asset: {
-      code: "ETH",
+      code: "ETH_ETHEREUM",
       symbol: "Ξ",
       name: "Ether",
       type: "CRYPTO",
       network: "ETHEREUM",
-      decimals: 6,
+      decimals: 18,
       depositEnabled: true,
       withdrawEnabled: true,
       exchangeEnabled: true,
@@ -168,28 +164,43 @@ export const demoProfile: Profile = {
 };
 
 export const demoAccess: AccountAccess = {
+  accountId: "demo-account",
+  accountStatus: "ACTIVE",
+  identityLevel: "SELF_DECLARED",
+  kycStatus: "NOT_STARTED",
+  pricingPlan: {
+    code: "BLACK_30",
+    label: "Atlas Black 30",
+    active: true,
+  },
+  policyProfile: {
+    code: "BLACK_ENTRY_OPEN",
+    label: "Black Entry (Open)",
+    operationalMode: "OPEN",
+    active: true,
+  },
   controls: {
     systemMoneyMovementEnabled: false,
     activeProviderCount: 0,
-    executionGate: "PAUSED",
+    executionGate: false,
   },
   requestedCapabilities: {
-    moneyDeposit: true,
-    moneyWithdraw: true,
+    fiatDeposit: true,
+    fiatWithdrawal: true,
     cryptoDeposit: true,
-    cryptoWithdraw: true,
+    cryptoWithdrawal: true,
     exchange: true,
-    investSubscription: true,
-    investRedemption: true,
+    internalTransfer: true,
+    investment: false,
   },
   effectiveCapabilities: {
-    moneyDeposit: false,
-    moneyWithdraw: false,
-    cryptoDeposit: true,
-    cryptoWithdraw: false,
+    fiatDeposit: false,
+    fiatWithdrawal: false,
+    cryptoDeposit: false,
+    cryptoWithdrawal: false,
     exchange: false,
-    investSubscription: false,
-    investRedemption: false,
+    internalTransfer: false,
+    investment: false,
   },
 };
 
@@ -202,27 +213,27 @@ export const demoActivity: ActivityItem[] = [
     assetCode: "BRL",
     network: "PIX",
     createdAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
-    description: "PIX deposit (in processing)",
+    description: "PIX deposit (illustrative)",
   },
   {
     id: "a_002",
     type: "EXCHANGE",
     status: "COMPLETED",
     amount: "1000.00",
-    assetCode: "USDT",
+    assetCode: "USDT_ETHEREUM",
     network: "ETHEREUM",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
-    description: "USD → USDT exchange",
+    description: "USD → USDT exchange (illustrative)",
   },
   {
     id: "a_003",
-    type: "CRYPTO_DEPOSIT" as ActivityItem["type"],
+    type: "DEPOSIT",
     status: "COMPLETED",
     amount: "0.02500000",
-    assetCode: "BTC",
-    network: "ETHEREUM",
+    assetCode: "BTC_BITCOIN",
+    network: "BITCOIN",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 28).toISOString(),
-    description: "Bitcoin receive",
+    description: "Bitcoin receive (illustrative)",
   },
 ];
 
