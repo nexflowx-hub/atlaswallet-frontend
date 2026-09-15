@@ -45,7 +45,7 @@ type FormValues = z.infer<typeof schema>;
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { register } = useAuth();
+  const { register, authMode } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,11 +58,15 @@ export default function RegisterPage() {
     setError(null);
     setSubmitting(true);
     try {
-      // Production flow:
-      //   Supabase signUp → session → GET /api/v1/me → if !provisioned POST /bootstrap → /portfolio
-      await register(values.email, values.password);
+      const session = await register(values.email, values.password);
+
+      if (!session) {
+        toast.success("Account created. Check your email to confirm your address.");
+        router.push("/login");
+        return;
+      }
+
       toast.success("Account created — welcome to AtlasWallet");
-      // Profile is progressive — never force completion before portfolio.
       router.push("/portfolio");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Registration failed");
@@ -95,12 +99,24 @@ export default function RegisterPage() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <Alert className="mb-4 border-brand/30 bg-brand/5">
-                <Info className="h-4 w-4 text-brand" />
-                <AlertDescription className="text-muted-foreground">
-                  Sandbox mode: Supabase is not configured. Demo session is local-only.
-                </AlertDescription>
-              </Alert>
+
+              {authMode === "demo" && (
+                <Alert className="mb-4 border-brand/30 bg-brand/5">
+                  <Info className="h-4 w-4 text-brand" />
+                  <AlertDescription className="text-muted-foreground">
+                    Demo mode is explicitly enabled. The account remains local and cannot move funds.
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {authMode === "unavailable" && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    Registration is temporarily unavailable because production authentication is not configured.
+                  </AlertDescription>
+                </Alert>
+              )}
 
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">
@@ -204,7 +220,7 @@ export default function RegisterPage() {
                 <Button
                   type="submit"
                   className="w-full bg-brand hover:bg-brand-bright text-white glow-brand"
-                  disabled={submitting}
+                  disabled={submitting || authMode === "unavailable"}
                 >
                   {submitting ? "Creating account…" : "Create account"}
                   <ArrowRight className="ml-2 h-4 w-4" />
