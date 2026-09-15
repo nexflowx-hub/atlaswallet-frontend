@@ -1,12 +1,16 @@
 /**
  * AtlasWallet — Backend API types.
- * Mirrors https://api.atlaswallet.org core models. Authoritative.
+ *
+ * These types mirror the currently deployed AtlasWallet API. Financial state is
+ * authoritative in the backend; the browser must never invent provider, ledger,
+ * wallet or capability state.
  */
 
 export type KycStatus =
   | "NOT_STARTED"
-  | "IN_PROGRESS"
-  | "VERIFIED"
+  | "PENDING"
+  | "IN_REVIEW"
+  | "APPROVED"
   | "REJECTED"
   | "EXPIRED";
 
@@ -16,30 +20,34 @@ export type IdentityLevel =
   | "VERIFIED"
   | "ENHANCED";
 
-export type PricingPlanCode = "BLACK_30" | "BLACK_60" | "STANDARD";
+export type PricingPlanCode =
+  | "BLACK_30"
+  | "BLACK_25"
+  | "BLACK_20"
+  | "WHITE_15"
+  | "WHITE_10"
+  | "WHITE_05";
 
 export type AccountStatus =
-  | "PENDING_PROVISIONING"
+  | "PENDING"
   | "ACTIVE"
+  | "RESTRICTED"
   | "SUSPENDED"
   | "CLOSED";
 
-export type WalletStatus = "ACTIVE" | "FROZEN" | "PENDING" | "CLOSED";
+export type UserStatus = "PENDING" | "ACTIVE" | "SUSPENDED" | "CLOSED";
 
-export type AssetType = "FIAT" | "CRYPTO";
+export type WalletStatus = "ACTIVE" | "RESTRICTED" | "SUSPENDED" | "CLOSED";
 
-export type NetworkCode =
-  | "ETHEREUM"
-  | "TRON"
-  | "SOLANA"
-  | "POLYGON"
-  | "BSC"
-  | "PIX"
-  | "SEPA"
-  | "SWIFT"
-  | "DOMESTIC";
+export type AssetType = "FIAT" | "CRYPTO" | "PRIVATE_ASSET" | "SECURITY";
+
+/** Blockchain/asset network enum from the backend Prisma schema. */
+export type NetworkCode = "NONE" | "BITCOIN" | "ETHEREUM" | "TRON" | "SOLANA";
+
+export type OperationalMode = "OPEN" | "CONTROLLED" | "RESTRICTED";
 
 export interface AssetInfo {
+  id?: string;
   code: string;
   symbol: string;
   name: string;
@@ -52,7 +60,7 @@ export interface AssetInfo {
 }
 
 export interface WalletBalance {
-  available: string; // decimal string
+  available: string;
   pending: string;
   reserved: string;
   blocked: string;
@@ -63,6 +71,8 @@ export interface Wallet {
   status: WalletStatus;
   asset: AssetInfo;
   balance: WalletBalance;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ProfileCompletion {
@@ -89,56 +99,101 @@ export interface Profile {
 export interface PricingPlan {
   code: PricingPlanCode;
   label: string;
-  feePercent?: number; // BLACK_30 commercial tier — NOT a universal operation fee
+  feeBasisPoints?: number;
+  /** Display derivative returned by the backend. Not a universal operation fee. */
+  feePercent?: number;
+  active?: boolean;
 }
 
 export interface PolicyProfile {
   code: string;
   label: string;
+  operationalMode?: OperationalMode;
+  active?: boolean;
 }
 
 export interface AccountInfo {
+  id?: string;
+  type?: "INDIVIDUAL" | "BUSINESS" | "INTERNAL";
   status: AccountStatus;
   kycStatus: KycStatus;
   identityLevel: IdentityLevel;
+  countryCode?: string | null;
   baseCurrency: string;
   pricingPlan: PricingPlan;
   policyProfile: PolicyProfile;
+  createdAt?: string;
 }
 
 export interface Me {
+  auth?: {
+    id: string;
+    email?: string | null;
+  };
   provisioned: boolean;
-  account: AccountInfo;
+  user?: {
+    id: string;
+    email?: string | null;
+    status: UserStatus;
+    createdAt?: string;
+  } | null;
+  account: AccountInfo | null;
 }
 
 export interface CapabilityControls {
   systemMoneyMovementEnabled: boolean;
   activeProviderCount: number;
-  executionGate: "OPEN" | "PAUSED" | "MAINTENANCE";
+  /** Global execution gate calculated server-side. */
+  executionGate: boolean;
 }
 
 export interface Capabilities {
-  moneyDeposit: boolean;
-  moneyWithdraw: boolean;
+  fiatDeposit: boolean;
+  fiatWithdrawal: boolean;
   cryptoDeposit: boolean;
-  cryptoWithdraw: boolean;
+  cryptoWithdrawal: boolean;
   exchange: boolean;
-  investSubscription: boolean;
-  investRedemption: boolean;
+  internalTransfer: boolean;
+  investment: boolean;
 }
 
 export interface AccountAccess {
+  accountId: string;
+  accountStatus: AccountStatus;
+  identityLevel: IdentityLevel;
+  kycStatus: KycStatus;
+  pricingPlan: PricingPlan;
+  policyProfile: PolicyProfile;
   controls: CapabilityControls;
   requestedCapabilities: Capabilities;
   effectiveCapabilities: Capabilities;
 }
 
-// Planned MVP endpoints (interfaces prepared; backend may not exist yet)
+export interface BootstrapResponse {
+  created: {
+    user: boolean;
+    account: boolean;
+    wallets: number;
+  };
+  user: {
+    id: string;
+    authUserId: string;
+    email?: string | null;
+    status: UserStatus;
+  };
+  account: AccountInfo;
+  wallets: Wallet[];
+}
+
+// Planned MVP endpoints (interfaces prepared; backend may not exist yet).
 export interface PortfolioSummary {
   totalBaseCurrency: string;
   baseCurrency: string;
   history?: { ts: string; value: string }[];
 }
+
+/** Payment rails are not AssetNetwork values; keep them separate in planned activity UI. */
+export type ActivityRail = "PIX" | "SEPA" | "SWIFT" | "DOMESTIC";
 
 export interface ActivityItem {
   id: string;
@@ -153,7 +208,7 @@ export interface ActivityItem {
   status: "PENDING" | "COMPLETED" | "FAILED" | "REVERSED";
   amount: string;
   assetCode: string;
-  network?: NetworkCode;
+  network?: NetworkCode | ActivityRail;
   createdAt: string;
   description: string;
 }
@@ -195,7 +250,6 @@ export interface InvestmentPosition {
   openedAt: string;
 }
 
-// API error normalization
 export interface ApiError {
   status: number;
   code: string;
